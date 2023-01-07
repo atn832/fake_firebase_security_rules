@@ -15,7 +15,7 @@ void main() {
     test('parse', () {
       final service = Parser().parse(securityRulesDescription);
       expect(service.pathMatches.length, 1);
-      expect(service.pathMatches.first.children.length, 2);
+      expect(service.pathMatches.first.allowStatements.length, 2);
     });
   });
 
