@@ -1,6 +1,6 @@
 import 'package:antlr4/antlr4.dart';
-import 'package:firestore_rules/FirestoreRulesLexer.dart';
-import 'package:firestore_rules/FirestoreRulesParser.dart';
+import 'package:firestore_rules/src/gen/FirestoreRulesLexer.dart';
+import 'package:firestore_rules/src/gen/FirestoreRulesParser.dart';
 
 bool match(ParserRuleContext pathRule, String concreteDocumentPath) {
   print('matching ${pathRule.text} against $concreteDocumentPath');
