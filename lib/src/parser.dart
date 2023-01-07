@@ -57,5 +57,5 @@ List<PathSegment> visitPath(PathContext path) {
 PathSegment visitPathSegment(PathSegmentContext s) {
   return s.NAME() != null
       ? ConstPathSegment(s.NAME()!.text!)
-      : VariablePathSegment(s.variable()!.text);
+      : VariablePathSegment(s.variable()!.NAME()!.text!);
 }

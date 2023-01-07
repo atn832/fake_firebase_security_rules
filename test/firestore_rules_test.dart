@@ -1,6 +1,7 @@
 import 'package:fake_firebase_security_rules/fake_firebase_security_rules.dart';
 import 'package:fake_firebase_security_rules/src/access_type.dart';
 import 'package:fake_firebase_security_rules/src/parser.dart';
+import 'package:fake_firebase_security_rules/src/path_segment.dart';
 import 'package:test/test.dart';
 
 final securityRulesDescription = '''service cloud.firestore {
@@ -16,6 +17,11 @@ void main() {
       final service = Parser().parse(securityRulesDescription);
       expect(service.pathMatches.length, 1);
       expect(service.pathMatches.first.allowStatements.length, 2);
+      expect(service.pathMatches.first.pathSegments, [
+        ConstPathSegment('databases'),
+        VariablePathSegment('database'),
+        ConstPathSegment('documents')
+      ]);
       print(service);
     });
   });
