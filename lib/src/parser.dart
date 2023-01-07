@@ -4,6 +4,7 @@ import 'package:fake_firebase_security_rules/src/access_type.dart';
 import 'package:fake_firebase_security_rules/src/gen/FirestoreRulesLexer.dart';
 import 'package:fake_firebase_security_rules/src/gen/FirestoreRulesParser.dart';
 import 'package:fake_firebase_security_rules/src/path_match.dart';
+import 'package:fake_firebase_security_rules/src/path_segment.dart';
 import 'package:fake_firebase_security_rules/src/service.dart';
 
 /// Parses a [String] describing a service to a [Service] wrapping [PathMatch]
@@ -34,7 +35,7 @@ Service visit(ServiceContext service) {
 PathMatch visitMatchRule(MatchRuleContext matchRule) {
   final allows =
       matchRule.allows().map((allowRule) => visitAllowRule(allowRule)).toList();
-  return PathMatch(allows, []);
+  return PathMatch(visitPath(matchRule.path()!), allows, []);
 }
 
 AllowStatement visitAllowRule(AllowContext allow) {
@@ -47,4 +48,14 @@ AllowStatement visitAllowRule(AllowContext allow) {
           .map((node) => AccessType.fromNameInFirebase(node.text!))
           .toList(),
       program);
+}
+
+List<PathSegment> visitPath(PathContext path) {
+  return path.pathSegments().map((s) => visitPathSegment(s)).toList();
+}
+
+PathSegment visitPathSegment(PathSegmentContext s) {
+  return s.NAME() != null
+      ? ConstPathSegment(s.NAME()!.text!)
+      : VariablePathSegment(s.variable()!.text);
 }

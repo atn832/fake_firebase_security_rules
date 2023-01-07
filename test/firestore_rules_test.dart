@@ -16,6 +16,7 @@ void main() {
       final service = Parser().parse(securityRulesDescription);
       expect(service.pathMatches.length, 1);
       expect(service.pathMatches.first.allowStatements.length, 2);
+      print(service);
     });
   });
 
