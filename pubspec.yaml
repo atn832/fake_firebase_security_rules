@@ -1,6 +1,6 @@
-name: firestore_rules
-description: A starting point for Dart libraries or applications.
-version: 1.0.0
+name: fake_firebase_security_rules
+description: Fake for Firebase Security Rules. To be used by fake_cloud_firestore and mock_firebase_storage.
+version: 0.5.0
 # repository: https://github.com/my_org/my_repo
 
 environment:
