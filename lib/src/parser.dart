@@ -35,11 +35,13 @@ Service visit(ServiceContext service) {
 PathMatch visitMatchRule(MatchRuleContext matchRule) {
   final allows =
       matchRule.allows().map((allowRule) => visitAllowRule(allowRule)).toList();
-  return PathMatch(visitPath(matchRule.path()!), allows, []);
+  return PathMatch(visitPath(matchRule.path()!), allows,
+      matchRule.matchRules().map((match) => visitMatchRule(match)).toList());
 }
 
 AllowStatement visitAllowRule(AllowContext allow) {
-  final celCode = allow.CES_EXPRESSION()!.text!;
+  // If the CEL expression is missing, the program is `true`.
+  final celCode = allow.CES_EXPRESSION()?.text ?? 'true';
   final environment = Environment();
   final ast = environment.compile(celCode);
   final program = Program(environment, ast);

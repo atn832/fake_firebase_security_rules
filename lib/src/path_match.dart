@@ -9,10 +9,20 @@ extension on List<PathSegment> {
   bool matches(String path) {
     // Skip the first /. Might have to revisit later.
     final concretePathSegments = path.substring(1).split('/');
-    if (concretePathSegments.length != length) {
+    return concretePathSegments.length == length && partiallyMatches(path);
+  }
+
+  /// Returns whether the beginning of the concrete path matches with its path
+  /// segments. By definition, it also returns true if it fully matches.
+  bool partiallyMatches(String path) {
+    // Skip the first /. Might have to revisit later.
+    final concretePathSegments = path.substring(1).split('/');
+
+    if (concretePathSegments.length < length) {
       return false;
     }
-    return IterableZip([this, concretePathSegments]).every((tuple) {
+    return IterableZip([this, concretePathSegments.sublist(0, length)])
+        .every((tuple) {
       final pathSegment = tuple.first as PathSegment;
       final concretePathSegment = tuple.last as String;
       return pathSegment.matches(concretePathSegment);
@@ -28,6 +38,18 @@ class PathMatch extends Equatable {
   final List<PathMatch> children;
 
   bool isAllowed(String path, AccessType accessType) {
+    print('isAllowed $path $pathSegments');
+    // if partiallyMatches, check children.
+    if (pathSegments.partiallyMatches(path)) {
+      // Take out the first segments covered by the current PathMatch.
+      final subPath = '/' +
+          path.substring(1).split('/').sublist(pathSegments.length).join('/');
+      for (final child in children) {
+        if (child.isAllowed(subPath, accessType)) {
+          return true;
+        }
+      }
+    }
     if (!pathSegments.matches(path)) {
       return false;
     }
@@ -40,7 +62,6 @@ class PathMatch extends Equatable {
         }
       }
     }
-    // TODO: support recursion.
     return false;
   }
 
