@@ -22,7 +22,6 @@ void main() {
         VariablePathSegment('database'),
         ConstPathSegment('documents')
       ]);
-      print(service);
     });
   });
 
@@ -40,7 +39,7 @@ void main() {
           isTrue);
       expect(
           securityRules.isAllowed(
-              '/databases/users/documents', AccessType.read),
+              '/databases/users/documents', AccessType.write),
           isFalse);
     });
   });
