@@ -14,6 +14,32 @@ service cloud.firestore {
 
 The library computes whether the request should be allowed or not.
 
+## Usage
+
+```dart
+import 'package:fake_firebase_security_rules/fake_firebase_security_rules.dart';
+
+final securityRulesDescription = '''service cloud.firestore {
+  match /databases/{database}/documents {
+    // For attribute-based access control, check for an admin claim
+    allow write: false;
+    allow read: true;
+  }
+}''';
+
+void main(List<String> args) async {
+  final securityRules = FakeFirebaseSecurityRules(securityRulesDescription);
+  // Prints out `false`.
+  print(
+      securityRules.isAllowed('/databases/users/documents', AccessType.write));
+  // Prints out `true`.
+  print(securityRules.isAllowed('/databases/users/documents', AccessType.read));
+  // Prints out `false`.
+  print(securityRules.isAllowed(
+      '/databases/users/documents/too-deep', AccessType.read));
+}
+```
+
 ## How it works
 
 `FirestoreRules.g4` describes a grammar that parses security rules into Matches. A Match contains a path, made up of segments. Some segments might be variables or wildcards. The expression at the right of allow statements is in Common Expression Language (CEL). CEL is a language used by many security projects. See the [CEL specs](https://github.com/google/cel-spec).
@@ -37,20 +63,6 @@ antlr -Dlanguage=Dart FirestoreRules.g4
 ## Features
 
 TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
-```dart
-const like = 'sample';
-```
 
 ## Differences between Firebase Rules CEL and standard CEL
 
