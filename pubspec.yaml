@@ -8,6 +8,8 @@ environment:
 
 dependencies:
   antlr4: ^4.11.1
+  cel:
+    path: ../cel-dart
 
 dev_dependencies:
   lints: ^2.0.0
