@@ -20,4 +20,7 @@ echo 7
 antlr4-parse FirestoreRules.g4 rulesDefinition -tree 7_request.auth.uid.txt
 echo 
 echo 8
-antlr4-parse FirestoreRules.g4 rulesDefinition -tree -tokens 8_complete_partial_matches.txt
+antlr4-parse FirestoreRules.g4 rulesDefinition -tree 8_complete_partial_matches.txt
+echo 
+echo 9
+antlr4-parse FirestoreRules.g4 rulesDefinition -tree -tokens 9_custom_claims.txt
