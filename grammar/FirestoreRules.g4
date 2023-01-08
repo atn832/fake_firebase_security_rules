@@ -1,8 +1,8 @@
 grammar FirestoreRules;
 rulesDefinition: rulesVersion? service? EOF;
 rulesVersion: 'rules_version' '=' STRING;
-service: 'service' 'cloud.firestore' '{' match* '}';
-match: 'match' path '{' (allow|match)* '}';
+service: 'service' 'cloud.firestore' '{' matcher* '}';
+matcher: 'match' path '{' (allow|matcher)* '}';
 allow: 'allow' ACCESS (',' ACCESS)* ':' CES_EXPRESSION;
 
 ACCESS: 'read' | 'write';

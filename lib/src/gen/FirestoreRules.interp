@@ -44,7 +44,7 @@ rule names:
 rulesDefinition
 rulesVersion
 service
-match
+matcher
 allow
 path
 pathSegment

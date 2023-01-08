@@ -28,12 +28,12 @@ abstract class FirestoreRulesListener extends ParseTreeListener {
   /// [ctx] the parse tree
   void exitService(ServiceContext ctx);
 
-  /// Enter a parse tree produced by [FirestoreRulesParser.match].
+  /// Enter a parse tree produced by [FirestoreRulesParser.matcher].
   /// [ctx] the parse tree
-  void enterMatch(MatchContext ctx);
-  /// Exit a parse tree produced by [FirestoreRulesParser.match].
+  void enterMatcher(MatcherContext ctx);
+  /// Exit a parse tree produced by [FirestoreRulesParser.matcher].
   /// [ctx] the parse tree
-  void exitMatch(MatchContext ctx);
+  void exitMatcher(MatcherContext ctx);
 
   /// Enter a parse tree produced by [FirestoreRulesParser.allow].
   /// [ctx] the parse tree
