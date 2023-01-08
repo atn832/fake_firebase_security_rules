@@ -1,20 +1,23 @@
 extension Includes on List<Method> {
-  /// In theory, it should also support `read.includes(update) ==> true`. See
-  /// https://firebase.google.com/docs/rules/rules-language#method.
-  bool includes(Method method) {
-    return contains(method);
-  }
+  bool includes(Method method) => any((m) => m.includes(method));
 }
 
+/// Based on https://firebase.google.com/docs/rules/rules-language#method.
 enum Method {
-  read('read'),
-  write('write'),
+  read('read', {Method.list}),
+  write('write', {Method.update, Method.delete}),
   update('update'),
   delete('delete'),
   list('list');
 
-  const Method(this.nameInFirebase);
+  const Method(this.nameInFirebase, [this.alsoIncludes = const {}]);
+
   final String nameInFirebase;
+  final Set<Method> alsoIncludes;
+
+  bool includes(Method m) {
+    return m == this || alsoIncludes.contains(m);
+  }
 
   factory Method.fromNameInFirebase(String nameInFirebase) {
     return Method.values

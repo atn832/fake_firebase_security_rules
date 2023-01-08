@@ -93,6 +93,32 @@ void main() {
     });
   });
 
+  group('Method', () {
+    test('read contains related methods', () {
+      expect(Method.read.includes(Method.list), isTrue);
+      expect(Method.read.includes(Method.read), isTrue);
+      expect(Method.read.includes(Method.update), isFalse);
+    });
+    test('write contains related methods', () {
+      expect(Method.write.includes(Method.write), isTrue);
+      expect(Method.write.includes(Method.update), isTrue);
+      expect(Method.write.includes(Method.delete), isTrue);
+      expect(Method.write.includes(Method.list), isFalse);
+    });
+    test('update only includes update', () {
+      expect(Method.update.includes(Method.update), isTrue);
+      expect(Method.update.includes(Method.write), isFalse);
+      expect(Method.update.includes(Method.delete), isFalse);
+      expect(Method.update.includes(Method.list), isFalse);
+    });
+  });
+
+  test('List<Method>. read/write encompasses all methods', () {
+    for (final method in Method.values) {
+      expect([Method.read, Method.write].includes(method), isTrue);
+    }
+  });
+
   group('FakeFirebaseSecurityRules', () {
     setUp(() {
       // Additional setup goes here.
