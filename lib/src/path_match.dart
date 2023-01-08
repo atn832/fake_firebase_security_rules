@@ -51,8 +51,7 @@ class PathMatch extends Equatable {
   final List<PathMatch> children;
 
   bool isAllowed(List<String> concretePathSegments, Method method,
-      {required Map<String, dynamic> auth,
-      required Map<String, String> variables}) {
+      {required Map<String, dynamic> variables}) {
     final potentialMatches =
         pathSegments.getPotentialMatches(concretePathSegments);
     for (final potentialMatch in potentialMatches) {
@@ -67,10 +66,6 @@ class PathMatch extends Equatable {
               ...variables,
               // and new variables first...
               ...potentialMatch.variables,
-              // So that they can never override the `request` Object.
-              ...{
-                'request': {'auth': auth}
-              }
             })) {
               return true;
             }
@@ -81,7 +76,6 @@ class PathMatch extends Equatable {
       // If partial match, check children.
       for (final child in children) {
         if (child.isAllowed(potentialMatch.remainingConcreteSegments, method,
-            auth: auth,
             variables: {...variables, ...potentialMatch.variables})) {
           return true;
         }

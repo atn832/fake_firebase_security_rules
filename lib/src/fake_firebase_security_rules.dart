@@ -12,7 +12,7 @@ class FakeFirebaseSecurityRules {
   final Service service;
 
   bool isAllowed(String path, Method method,
-      {Map<String, dynamic> auth = const {}}) {
+      {Map<String, dynamic> variables = const {}}) {
     // TODO: populate `request` and `resource`.
     // https://firebase.google.com/docs/rules/rules-language#building_conditions
     // https://firebase.google.com/docs/reference/rules/rules.firestore.Request
@@ -25,7 +25,7 @@ class FakeFirebaseSecurityRules {
     // https://firebase.google.com/docs/rules/rules-and-auth
     for (final match in service.pathMatches) {
       if (match.isAllowed(path.concretePathSegments, method,
-          auth: auth, variables: {})) {
+          variables: variables)) {
         return true;
       }
     }

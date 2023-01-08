@@ -119,7 +119,11 @@ void main() {
       expect(
           securityRules.isAllowed(
               '/databases/some-database/documents/users/$uid', Method.read,
-              auth: {'uid': uid}),
+              variables: {
+                'request': {
+                  'auth': {'uid': uid}
+                }
+              }),
           isTrue);
     });
 
