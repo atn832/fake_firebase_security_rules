@@ -1,7 +1,6 @@
 import 'package:fake_firebase_security_rules/fake_firebase_security_rules.dart';
 import 'package:fake_firebase_security_rules/src/parser.dart';
 import 'package:fake_firebase_security_rules/src/path_segment/const_path_segment.dart';
-import 'package:fake_firebase_security_rules/src/path_segment/path_segment.dart';
 import 'package:fake_firebase_security_rules/src/path_segment/variable_path_segment.dart';
 import 'package:test/test.dart';
 
@@ -54,6 +53,9 @@ service cloud.firestore {
     match /cities/{document=**} {
       allow read, write: true;
     }
+    match /languages/{regions=**}/city/{city} {
+      allow read: if city in ['paris', 'london'];
+    }
   }
 }
 ''';
@@ -91,6 +93,32 @@ void main() {
     });
   });
 
+  group('Method', () {
+    test('read contains related methods', () {
+      expect(Method.read.includes(Method.list), isTrue);
+      expect(Method.read.includes(Method.read), isTrue);
+      expect(Method.read.includes(Method.update), isFalse);
+    });
+    test('write contains related methods', () {
+      expect(Method.write.includes(Method.write), isTrue);
+      expect(Method.write.includes(Method.update), isTrue);
+      expect(Method.write.includes(Method.delete), isTrue);
+      expect(Method.write.includes(Method.list), isFalse);
+    });
+    test('update only includes update', () {
+      expect(Method.update.includes(Method.update), isTrue);
+      expect(Method.update.includes(Method.write), isFalse);
+      expect(Method.update.includes(Method.delete), isFalse);
+      expect(Method.update.includes(Method.list), isFalse);
+    });
+  });
+
+  test('List<Method>. read/write encompasses all methods', () {
+    for (final method in Method.values) {
+      expect([Method.read, Method.write].includes(method), isTrue);
+    }
+  });
+
   group('FakeFirebaseSecurityRules', () {
     setUp(() {
       // Additional setup goes here.
@@ -117,8 +145,35 @@ void main() {
       expect(
           securityRules.isAllowed(
               '/databases/some-database/documents/users/$uid', Method.read,
-              auth: {'uid': uid}),
+              variables: {
+                'request': {
+                  'auth': {'uid': uid}
+                }
+              }),
           isTrue);
+    });
+
+    test('wildcards and in', () {
+      final securityRules = FakeFirebaseSecurityRules(wildcardDescription);
+      expect(
+          securityRules.isAllowed(
+              '/databases/db1/documents/cities/paris', Method.read),
+          isTrue);
+      expect(
+          securityRules.isAllowed(
+              '/databases/db1/documents/cities/paris/arrondissement14',
+              Method.read),
+          isTrue);
+      expect(
+          securityRules.isAllowed(
+              '/databases/db1/documents/languages/france/idf/city/paris',
+              Method.read),
+          isTrue);
+      expect(
+          securityRules.isAllowed(
+              '/databases/db1/documents/languages/france/idf/city/lyon',
+              Method.read),
+          isFalse);
     });
   });
 }

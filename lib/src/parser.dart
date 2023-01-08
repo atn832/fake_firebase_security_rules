@@ -7,6 +7,7 @@ import 'package:fake_firebase_security_rules/src/path_match.dart';
 import 'package:fake_firebase_security_rules/src/path_segment/const_path_segment.dart';
 import 'package:fake_firebase_security_rules/src/path_segment/path_segment.dart';
 import 'package:fake_firebase_security_rules/src/path_segment/variable_path_segment.dart';
+import 'package:fake_firebase_security_rules/src/path_segment/wildcard_path_segment.dart';
 import 'package:fake_firebase_security_rules/src/service.dart';
 
 /// Parses a [String] describing a service to a [Service] wrapping [PathMatch]
@@ -43,9 +44,9 @@ AllowStatement visitAllowRule(AllowContext allow) {
   // The CEL might start with ':' and potentially 'if' and always ends with ';'.
   // Remove them.
   final celCode = cleanUpCEL(allow.CEL()?.text);
-  final environment = Environment();
+  final environment = Environment.standard();
   final ast = environment.compile(celCode);
-  final program = Program(environment, ast);
+  final program = environment.makeProgram(ast);
   return AllowStatement(
       allow.METHODs()
           .map((node) => Method.fromNameInFirebase(node.text!))
@@ -76,7 +77,11 @@ List<PathSegment> visitPath(PathContext path) {
 }
 
 PathSegment visitPathSegment(PathSegmentContext s) {
-  return s.NAME() != null
-      ? ConstPathSegment(s.NAME()!.text!)
-      : VariablePathSegment(s.variable()!.NAME()!.text!);
+  if (s.NAME() != null) {
+    return ConstPathSegment(s.NAME()!.text!);
+  }
+  final variableName = s.variable()!.NAME()!.text!;
+  return s.variable()!.wildcard != null
+      ? WildcardPathSegment(variableName)
+      : VariablePathSegment(variableName);
 }

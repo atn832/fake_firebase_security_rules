@@ -1,7 +1,8 @@
 # fake_firebase_security rules
 
 This project simulates Firebase Security Rules used by Firestore and Firebase Storage. Given these request inputs:
-* Firebase security rules, eg.
+
+* Firebase security rules, eg.:
 
 ```
 service cloud.firestore {
@@ -10,6 +11,7 @@ service cloud.firestore {
   }
 }
 ```
+
 * Concrete path and access method, eg /users/abcd/documents, update.
 
 The library computes whether the request should be allowed or not.
@@ -75,8 +77,8 @@ TODO: List what your package can do. Maybe include images, gifs, or videos.
 * Timestamps. Firebase Rules uses its own [Timestamp](https://firebase.google.com/docs/reference/rules/rules.Timestamp)
  implementation while CEL uses `google.protobuf.Timestamp` ([spec](https://github.com/google/cel-spec/blob/master/doc/langdef.md#abstract-types)).
 
- ## Further readings
+## Further readings
 
 * Custom claims
-    * <https://firebase.google.com/docs/auth/admin/custom-claims>
-    * <https://firebase.google.com/docs/rules/rules-and-auth>
+  * <https://firebase.google.com/docs/auth/admin/custom-claims>
+  * <https://firebase.google.com/docs/rules/rules-and-auth>
