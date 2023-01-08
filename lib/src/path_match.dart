@@ -37,15 +37,15 @@ class PathMatch extends Equatable {
   final List<AllowStatement> allowStatements;
   final List<PathMatch> children;
 
-  bool isAllowed(String path, Method method) {
-    print('isAllowed $path $pathSegments');
+  bool isAllowed(String path, Method method,
+      {required Map<String, dynamic> auth}) {
     // if partiallyMatches, check children.
     if (pathSegments.partiallyMatches(path)) {
       // Take out the first segments covered by the current PathMatch.
       final subPath = '/' +
           path.substring(1).split('/').sublist(pathSegments.length).join('/');
       for (final child in children) {
-        if (child.isAllowed(subPath, method)) {
+        if (child.isAllowed(subPath, method, auth: auth)) {
           return true;
         }
       }
@@ -57,7 +57,9 @@ class PathMatch extends Equatable {
       if (allowStatement.item1.includes(method)) {
         // evaluate the program.
         // TODO: add real inputs, eg Request, now...
-        if (allowStatement.item2.evaluate({})) {
+        if (allowStatement.item2.evaluate({
+          'request': {'auth': auth}
+        })) {
           return true;
         }
       }

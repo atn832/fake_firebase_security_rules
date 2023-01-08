@@ -1,5 +1,4 @@
 import 'package:fake_firebase_security_rules/fake_firebase_security_rules.dart';
-import 'package:fake_firebase_security_rules/src/method.dart';
 import 'package:fake_firebase_security_rules/src/parser.dart';
 import 'package:fake_firebase_security_rules/src/path_segment.dart';
 import 'package:test/test.dart';
@@ -32,6 +31,19 @@ service cloud.firestore {
   }
 }''';
 
+// https://firebase.google.com/docs/rules/rules-and-auth#leverage_user_information_in_rules
+final authUidDescription = '''
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Make sure the uid of the requesting user matches name of the user
+    // document. The wildcard expression {userId} makes the userId variable
+    // available in rules.
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}''';
+
 void main() {
   group('Parser', () {
     test('parse', () {
@@ -50,6 +62,9 @@ void main() {
           [ConstPathSegment('example'), VariablePathSegment('single')]);
       expect(service.pathMatches[0].children[0].pathSegments,
           [ConstPathSegment('nested'), ConstPathSegment('path')]);
+    });
+    test('authUidDescription', () {
+      final service = Parser().parse(authUidDescription);
       print(service);
     });
   });
@@ -71,6 +86,16 @@ void main() {
       final securityRules =
           FakeFirebaseSecurityRules(completeAndPartialMatchesDescription);
       expect(securityRules.isAllowed('/example/hello/nested/path', Method.read),
+          isTrue);
+    });
+
+    test('auth', () {
+      final securityRules = FakeFirebaseSecurityRules(authUidDescription);
+      final uid = 'a57293b';
+      expect(
+          securityRules.isAllowed(
+              '/databases/some-database/documents/users/$uid', Method.read,
+              auth: {'uid': uid}),
           isTrue);
     });
   });

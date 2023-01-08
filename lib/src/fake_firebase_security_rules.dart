@@ -8,7 +8,8 @@ class FakeFirebaseSecurityRules {
 
   final Service service;
 
-  bool isAllowed(String path, Method method) {
+  bool isAllowed(String path, Method method,
+      {Map<String, dynamic> auth = const {}}) {
     // TODO: populate `request` and `resource`.
     // https://firebase.google.com/docs/rules/rules-language#building_conditions
     // https://firebase.google.com/docs/reference/rules/rules.firestore.Request
@@ -20,7 +21,7 @@ class FakeFirebaseSecurityRules {
     // TODO: populate `request` with `auth`.
     // https://firebase.google.com/docs/rules/rules-and-auth
     for (final match in service.pathMatches) {
-      if (match.isAllowed(path, method)) {
+      if (match.isAllowed(path, method, auth: auth)) {
         return true;
       }
     }

@@ -66,5 +66,11 @@ TODO: List what your package can do. Maybe include images, gifs, or videos.
 
 ## Differences between Firebase Rules CEL and standard CEL
 
-- Timestamps. Firebase Rules uses its own [Timestamp](https://firebase.google.com/docs/reference/rules/rules.Timestamp)
+* Timestamps. Firebase Rules uses its own [Timestamp](https://firebase.google.com/docs/reference/rules/rules.Timestamp)
  implementation while CEL uses `google.protobuf.Timestamp` ([spec](https://github.com/google/cel-spec/blob/master/doc/langdef.md#abstract-types)).
+
+ ## Further readings
+
+* Custom claims
+    * <https://firebase.google.com/docs/auth/admin/custom-claims>
+    * <https://firebase.google.com/docs/rules/rules-and-auth>
