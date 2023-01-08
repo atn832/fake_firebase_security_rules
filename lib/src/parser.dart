@@ -4,7 +4,9 @@ import 'package:fake_firebase_security_rules/src/method.dart';
 import 'package:fake_firebase_security_rules/src/gen/FirestoreRulesLexer.dart';
 import 'package:fake_firebase_security_rules/src/gen/FirestoreRulesParser.dart';
 import 'package:fake_firebase_security_rules/src/path_match.dart';
-import 'package:fake_firebase_security_rules/src/path_segment.dart';
+import 'package:fake_firebase_security_rules/src/path_segment/const_path_segment.dart';
+import 'package:fake_firebase_security_rules/src/path_segment/path_segment.dart';
+import 'package:fake_firebase_security_rules/src/path_segment/variable_path_segment.dart';
 import 'package:fake_firebase_security_rules/src/service.dart';
 
 /// Parses a [String] describing a service to a [Service] wrapping [PathMatch]
@@ -51,16 +53,22 @@ AllowStatement visitAllowRule(AllowContext allow) {
       program);
 }
 
+/// Extensions to help clean up CEL.
+extension on String {
+  String removeStarting(String s) {
+    return startsWith(s) ? substring(s.length, length).trim() : this;
+  }
+
+  String removeTrailing(String s) {
+    return endsWith(s) ? substring(0, length - s.length).trim() : this;
+  }
+}
+
 String cleanUpCEL(String? cel) {
-  if (cel == null) {
+  if (cel == null || cel.removeTrailing(';').isEmpty) {
     return 'true';
   }
-  // Remove the starting ':'.
-  // Remove the starting 'if' if it exists.
-  final start = cel.startsWith(': if') ? 5 : 2;
-  // Remove the trailing ';'.
-  final end = cel.length - 1;
-  return cel.substring(start, end);
+  return cel.removeStarting(':').removeStarting('if').removeTrailing(';');
 }
 
 List<PathSegment> visitPath(PathContext path) {

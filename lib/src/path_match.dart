@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:cel/cel.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fake_firebase_security_rules/src/method.dart';
-import 'package:fake_firebase_security_rules/src/path_segment.dart';
+import 'package:fake_firebase_security_rules/src/path_segment/path_segment.dart';
 import 'package:tuple/tuple.dart';
 
 extension on List<PathSegment> {
