@@ -73,10 +73,3 @@ class PathMatch extends Equatable {
 }
 
 typedef AllowStatement = Tuple2<List<AccessType>, Program>;
-
-extension on List<AccessType> {
-  /// In theory, it should also support `read.includes(update) ==> true`.
-  bool includes(AccessType accessType) {
-    return contains(accessType);
-  }
-}
