@@ -10,7 +10,6 @@ dependencies:
   antlr4: ^4.11.1
   cel:
     path: ../cel-dart
-  collection: ^1.17.0
   equatable: ^2.0.5
   tuple: ^2.0.1
 

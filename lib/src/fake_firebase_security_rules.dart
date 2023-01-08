@@ -1,5 +1,6 @@
 import 'package:fake_firebase_security_rules/src/method.dart';
 import 'package:fake_firebase_security_rules/src/parser.dart';
+import 'package:fake_firebase_security_rules/src/path_match.dart';
 import 'package:fake_firebase_security_rules/src/service.dart';
 
 class FakeFirebaseSecurityRules {
@@ -23,7 +24,8 @@ class FakeFirebaseSecurityRules {
     // TODO: populate `request` with `auth`.
     // https://firebase.google.com/docs/rules/rules-and-auth
     for (final match in service.pathMatches) {
-      if (match.isAllowed(path, method, auth: auth, variables: {})) {
+      if (match.isAllowed(path.concretePathSegments, method,
+          auth: auth, variables: {})) {
         return true;
       }
     }

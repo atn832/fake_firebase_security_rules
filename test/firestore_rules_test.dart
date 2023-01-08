@@ -54,6 +54,9 @@ service cloud.firestore {
     match /cities/{document=**} {
       allow read, write: true;
     }
+    match /languages/{regions=**}/city/{city} {
+      allow read: if city == 'paris';
+    }
   }
 }
 ''';
@@ -132,6 +135,16 @@ void main() {
               '/databases/db1/documents/cities/paris/arrondissement14',
               Method.read),
           isTrue);
+      expect(
+          securityRules.isAllowed(
+              '/databases/db1/documents/languages/france/idf/city/paris',
+              Method.read),
+          isTrue);
+      expect(
+          securityRules.isAllowed(
+              '/databases/db1/documents/languages/france/idf/city/lyon',
+              Method.read),
+          isFalse);
     });
   });
 }
