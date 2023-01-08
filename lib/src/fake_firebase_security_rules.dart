@@ -4,7 +4,9 @@ import 'package:fake_firebase_security_rules/src/service.dart';
 
 class FakeFirebaseSecurityRules {
   FakeFirebaseSecurityRules(String securityRules)
-      : service = Parser().parse(securityRules);
+      : service = Parser()
+            .parse(securityRules)
+            .firstWhere((service) => service.name == 'cloud.firestore');
 
   final Service service;
 
@@ -21,7 +23,7 @@ class FakeFirebaseSecurityRules {
     // TODO: populate `request` with `auth`.
     // https://firebase.google.com/docs/rules/rules-and-auth
     for (final match in service.pathMatches) {
-      if (match.isAllowed(path, method, auth: auth)) {
+      if (match.isAllowed(path, method, auth: auth, variables: {})) {
         return true;
       }
     }

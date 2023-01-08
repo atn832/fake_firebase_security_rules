@@ -47,7 +47,9 @@ service cloud.firestore {
 void main() {
   group('Parser', () {
     test('parse', () {
-      final service = Parser().parse(securityRulesDescription);
+      final services = Parser().parse(securityRulesDescription);
+      expect(services.length, 1);
+      final service = services.first;
       expect(service.pathMatches.length, 1);
       expect(service.pathMatches.first.allowStatements.length, 2);
       expect(service.pathMatches.first.pathSegments, [
@@ -57,9 +59,10 @@ void main() {
       ]);
     });
     test('nested paths', () {
-      final service = Parser().parse(completeAndPartialMatchesDescription);
+      final service =
+          Parser().parse(completeAndPartialMatchesDescription).first;
       expect(service.pathMatches[0].pathSegments,
-          [ConstPathSegment('example'), VariablePathSegment('single')]);
+          [ConstPathSegment('example'), VariablePathSegment('singleSegment')]);
       expect(service.pathMatches[0].children[0].pathSegments,
           [ConstPathSegment('nested'), ConstPathSegment('path')]);
     });

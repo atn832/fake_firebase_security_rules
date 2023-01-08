@@ -28,6 +28,19 @@ extension on List<PathSegment> {
       return pathSegment.matches(concretePathSegment);
     });
   }
+
+  Map<String, String> getNewVariables(String path) {
+    // Skip the first /. Might have to revisit later.
+    final concretePathSegments = path.substring(1).split('/');
+    final newVariables = <String, String>{};
+    for (final tuple
+        in IterableZip([this, concretePathSegments.sublist(0, length)])) {
+      final pathSegment = tuple.first as PathSegment;
+      final concretePathSegment = tuple.last as String;
+      newVariables.addAll(pathSegment.getNewVariables(concretePathSegment));
+    }
+    return newVariables;
+  }
 }
 
 class PathMatch extends Equatable {
@@ -38,14 +51,20 @@ class PathMatch extends Equatable {
   final List<PathMatch> children;
 
   bool isAllowed(String path, Method method,
-      {required Map<String, dynamic> auth}) {
+      {required Map<String, dynamic> auth,
+      required Map<String, String> variables}) {
     // if partiallyMatches, check children.
     if (pathSegments.partiallyMatches(path)) {
       // Take out the first segments covered by the current PathMatch.
       final subPath = '/' +
           path.substring(1).split('/').sublist(pathSegments.length).join('/');
+      final newVariables = {
+        ...variables,
+        ...pathSegments.getNewVariables(path)
+      };
       for (final child in children) {
-        if (child.isAllowed(subPath, method, auth: auth)) {
+        if (child.isAllowed(subPath, method,
+            auth: auth, variables: newVariables)) {
           return true;
         }
       }
@@ -58,7 +77,14 @@ class PathMatch extends Equatable {
         // evaluate the program.
         // TODO: add real inputs, eg Request, now...
         if (allowStatement.item2.evaluate({
-          'request': {'auth': auth}
+          // Put variables
+          ...variables,
+          // and new variables first...
+          ...pathSegments.getNewVariables(path),
+          // So that they can never override the `request` Object.
+          ...{
+            'request': {'auth': auth}
+          }
         })) {
           return true;
         }
