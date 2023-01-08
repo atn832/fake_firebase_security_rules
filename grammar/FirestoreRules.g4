@@ -5,7 +5,7 @@ service: 'service' 'cloud.firestore' '{' matcher* '}';
 matcher: 'match' path '{' (allow|matcher)* '}';
 allow: 'allow' METHOD (',' METHOD)* ':' CES_EXPRESSION;
 
-METHOD: 'read' | 'write';
+METHOD: 'read' | 'write' | 'get' | 'list' | 'create' | 'update' | 'delete';
 path: pathSegment+;
 pathSegment: '/' (NAME|variable);
 NAME: [a-zA-Z0-9_-]+;
