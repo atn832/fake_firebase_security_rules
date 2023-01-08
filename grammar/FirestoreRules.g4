@@ -1,7 +1,7 @@
 grammar FirestoreRules;
-rulesDefinition: rulesVersion? service? EOF;
+rulesDefinition: rulesVersion? service* EOF;
 rulesVersion: 'rules_version' '=' STRING;
-service: 'service' 'cloud.firestore' '{' matcher* '}';
+service: 'service' serviceName=('cloud.firestore' | 'firebase.storage') '{' matcher* '}';
 matcher: 'match' path '{' (allow|matcher)* '}';
 allow: 'allow' METHOD (',' METHOD)* CEL;
 

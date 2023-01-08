@@ -17,8 +17,8 @@ class FirestoreRulesParser extends Parser {
   static const int TOKEN_T__0 = 1, TOKEN_T__1 = 2, TOKEN_T__2 = 3, TOKEN_T__3 = 4, 
                    TOKEN_T__4 = 5, TOKEN_T__5 = 6, TOKEN_T__6 = 7, TOKEN_T__7 = 8, 
                    TOKEN_T__8 = 9, TOKEN_T__9 = 10, TOKEN_T__10 = 11, TOKEN_T__11 = 12, 
-                   TOKEN_ACCESS = 13, TOKEN_NAME = 14, TOKEN_STRING = 15, 
-                   TOKEN_CES_EXPRESSION = 16, TOKEN_WHITESPACE = 17, TOKEN_COMMENT = 18;
+                   TOKEN_METHOD = 13, TOKEN_NAME = 14, TOKEN_STRING = 15, 
+                   TOKEN_CEL = 16, TOKEN_WHITESPACE = 17, TOKEN_COMMENT = 18;
 
   @override
   final List<String> ruleNames = [
@@ -28,12 +28,12 @@ class FirestoreRulesParser extends Parser {
 
   static final List<String?> _LITERAL_NAMES = [
       null, "'rules_version'", "'='", "'service'", "'cloud.firestore'", 
-      "'{'", "'}'", "'match'", "'allow'", "','", "':'", "'/'", "'=**'"
+      "'firebase.storage'", "'{'", "'}'", "'match'", "'allow'", "','", "'/'", 
+      "'=**'"
   ];
   static final List<String?> _SYMBOLIC_NAMES = [
       null, null, null, null, null, null, null, null, null, null, null, 
-      null, null, "ACCESS", "NAME", "STRING", "CES_EXPRESSION", "WHITESPACE", 
-      "COMMENT"
+      null, null, "METHOD", "NAME", "STRING", "CEL", "WHITESPACE", "COMMENT"
   ];
   static final Vocabulary VOCABULARY = VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -71,15 +71,17 @@ class FirestoreRulesParser extends Parser {
         rulesVersion();
       }
 
-      state = 20;
+      state = 22;
       errorHandler.sync(this);
       _la = tokenStream.LA(1)!;
-      if (_la == TOKEN_T__2) {
+      while (_la == TOKEN_T__2) {
         state = 19;
         service();
+        state = 24;
+        errorHandler.sync(this);
+        _la = tokenStream.LA(1)!;
       }
-
-      state = 22;
+      state = 25;
       match(TOKEN_EOF);
     } on RecognitionException catch (re) {
       _localctx.exception = re;
@@ -96,11 +98,11 @@ class FirestoreRulesParser extends Parser {
     enterRule(_localctx, 2, RULE_rulesVersion);
     try {
       enterOuterAlt(_localctx, 1);
-      state = 24;
+      state = 27;
       match(TOKEN_T__0);
-      state = 25;
+      state = 28;
       match(TOKEN_T__1);
-      state = 26;
+      state = 29;
       match(TOKEN_STRING);
     } on RecognitionException catch (re) {
       _localctx.exception = re;
@@ -118,24 +120,32 @@ class FirestoreRulesParser extends Parser {
     int _la;
     try {
       enterOuterAlt(_localctx, 1);
-      state = 28;
+      state = 31;
       match(TOKEN_T__2);
-      state = 29;
-      match(TOKEN_T__3);
-      state = 30;
-      match(TOKEN_T__4);
-      state = 34;
+      state = 32;
+      _localctx.serviceName = tokenStream.LT(1);
+      _la = tokenStream.LA(1)!;
+      if (!(_la == TOKEN_T__3 || _la == TOKEN_T__4)) {
+        _localctx.serviceName = errorHandler.recoverInline(this);
+      } else {
+        if ( tokenStream.LA(1)! == IntStream.EOF ) matchedEOF = true;
+        errorHandler.reportMatch(this);
+        consume();
+      }
+      state = 33;
+      match(TOKEN_T__5);
+      state = 37;
       errorHandler.sync(this);
       _la = tokenStream.LA(1)!;
-      while (_la == TOKEN_T__6) {
-        state = 31;
+      while (_la == TOKEN_T__7) {
+        state = 34;
         matcher();
-        state = 36;
+        state = 39;
         errorHandler.sync(this);
         _la = tokenStream.LA(1)!;
       }
-      state = 37;
-      match(TOKEN_T__5);
+      state = 40;
+      match(TOKEN_T__6);
     } on RecognitionException catch (re) {
       _localctx.exception = re;
       errorHandler.reportError(this, re);
@@ -152,36 +162,36 @@ class FirestoreRulesParser extends Parser {
     int _la;
     try {
       enterOuterAlt(_localctx, 1);
-      state = 39;
-      match(TOKEN_T__6);
-      state = 40;
+      state = 42;
+      match(TOKEN_T__7);
+      state = 43;
       path();
-      state = 41;
-      match(TOKEN_T__4);
-      state = 46;
+      state = 44;
+      match(TOKEN_T__5);
+      state = 49;
       errorHandler.sync(this);
       _la = tokenStream.LA(1)!;
-      while (_la == TOKEN_T__6 || _la == TOKEN_T__7) {
-        state = 44;
+      while (_la == TOKEN_T__7 || _la == TOKEN_T__8) {
+        state = 47;
         errorHandler.sync(this);
         switch (tokenStream.LA(1)!) {
-        case TOKEN_T__7:
-          state = 42;
+        case TOKEN_T__8:
+          state = 45;
           allow();
           break;
-        case TOKEN_T__6:
-          state = 43;
+        case TOKEN_T__7:
+          state = 46;
           matcher();
           break;
         default:
           throw NoViableAltException(this);
         }
-        state = 48;
+        state = 51;
         errorHandler.sync(this);
         _la = tokenStream.LA(1)!;
       }
-      state = 49;
-      match(TOKEN_T__5);
+      state = 52;
+      match(TOKEN_T__6);
     } on RecognitionException catch (re) {
       _localctx.exception = re;
       errorHandler.reportError(this, re);
@@ -198,26 +208,24 @@ class FirestoreRulesParser extends Parser {
     int _la;
     try {
       enterOuterAlt(_localctx, 1);
-      state = 51;
-      match(TOKEN_T__7);
-      state = 52;
-      match(TOKEN_ACCESS);
-      state = 57;
+      state = 54;
+      match(TOKEN_T__8);
+      state = 55;
+      match(TOKEN_METHOD);
+      state = 60;
       errorHandler.sync(this);
       _la = tokenStream.LA(1)!;
-      while (_la == TOKEN_T__8) {
-        state = 53;
-        match(TOKEN_T__8);
-        state = 54;
-        match(TOKEN_ACCESS);
-        state = 59;
+      while (_la == TOKEN_T__9) {
+        state = 56;
+        match(TOKEN_T__9);
+        state = 57;
+        match(TOKEN_METHOD);
+        state = 62;
         errorHandler.sync(this);
         _la = tokenStream.LA(1)!;
       }
-      state = 60;
-      match(TOKEN_T__9);
-      state = 61;
-      match(TOKEN_CES_EXPRESSION);
+      state = 63;
+      match(TOKEN_CEL);
     } on RecognitionException catch (re) {
       _localctx.exception = re;
       errorHandler.reportError(this, re);
@@ -234,13 +242,13 @@ class FirestoreRulesParser extends Parser {
     int _la;
     try {
       enterOuterAlt(_localctx, 1);
-      state = 64; 
+      state = 66; 
       errorHandler.sync(this);
       _la = tokenStream.LA(1)!;
       do {
-        state = 63;
+        state = 65;
         pathSegment();
-        state = 66; 
+        state = 68; 
         errorHandler.sync(this);
         _la = tokenStream.LA(1)!;
       } while (_la == TOKEN_T__10);
@@ -259,17 +267,17 @@ class FirestoreRulesParser extends Parser {
     enterRule(_localctx, 12, RULE_pathSegment);
     try {
       enterOuterAlt(_localctx, 1);
-      state = 68;
+      state = 70;
       match(TOKEN_T__10);
-      state = 71;
+      state = 73;
       errorHandler.sync(this);
       switch (tokenStream.LA(1)!) {
       case TOKEN_NAME:
-        state = 69;
+        state = 71;
         match(TOKEN_NAME);
         break;
-      case TOKEN_T__4:
-        state = 70;
+      case TOKEN_T__5:
+        state = 72;
         variable();
         break;
       default:
@@ -291,20 +299,20 @@ class FirestoreRulesParser extends Parser {
     int _la;
     try {
       enterOuterAlt(_localctx, 1);
-      state = 73;
-      match(TOKEN_T__4);
-      state = 74;
-      match(TOKEN_NAME);
+      state = 75;
+      match(TOKEN_T__5);
       state = 76;
+      match(TOKEN_NAME);
+      state = 78;
       errorHandler.sync(this);
       _la = tokenStream.LA(1)!;
       if (_la == TOKEN_T__11) {
-        state = 75;
+        state = 77;
         match(TOKEN_T__11);
       }
 
-      state = 78;
-      match(TOKEN_T__5);
+      state = 80;
+      match(TOKEN_T__6);
     } on RecognitionException catch (re) {
       _localctx.exception = re;
       errorHandler.reportError(this, re);
@@ -316,30 +324,31 @@ class FirestoreRulesParser extends Parser {
   }
 
   static const List<int> _serializedATN = [
-      4,1,18,81,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,
-      2,7,7,7,1,0,3,0,18,8,0,1,0,3,0,21,8,0,1,0,1,0,1,1,1,1,1,1,1,1,1,2,
-      1,2,1,2,1,2,5,2,33,8,2,10,2,12,2,36,9,2,1,2,1,2,1,3,1,3,1,3,1,3,1,
-      3,5,3,45,8,3,10,3,12,3,48,9,3,1,3,1,3,1,4,1,4,1,4,1,4,5,4,56,8,4,10,
-      4,12,4,59,9,4,1,4,1,4,1,4,1,5,4,5,65,8,5,11,5,12,5,66,1,6,1,6,1,6,
-      3,6,72,8,6,1,7,1,7,1,7,3,7,77,8,7,1,7,1,7,1,7,0,0,8,0,2,4,6,8,10,12,
-      14,0,0,81,0,17,1,0,0,0,2,24,1,0,0,0,4,28,1,0,0,0,6,39,1,0,0,0,8,51,
-      1,0,0,0,10,64,1,0,0,0,12,68,1,0,0,0,14,73,1,0,0,0,16,18,3,2,1,0,17,
-      16,1,0,0,0,17,18,1,0,0,0,18,20,1,0,0,0,19,21,3,4,2,0,20,19,1,0,0,0,
-      20,21,1,0,0,0,21,22,1,0,0,0,22,23,5,0,0,1,23,1,1,0,0,0,24,25,5,1,0,
-      0,25,26,5,2,0,0,26,27,5,15,0,0,27,3,1,0,0,0,28,29,5,3,0,0,29,30,5,
-      4,0,0,30,34,5,5,0,0,31,33,3,6,3,0,32,31,1,0,0,0,33,36,1,0,0,0,34,32,
-      1,0,0,0,34,35,1,0,0,0,35,37,1,0,0,0,36,34,1,0,0,0,37,38,5,6,0,0,38,
-      5,1,0,0,0,39,40,5,7,0,0,40,41,3,10,5,0,41,46,5,5,0,0,42,45,3,8,4,0,
-      43,45,3,6,3,0,44,42,1,0,0,0,44,43,1,0,0,0,45,48,1,0,0,0,46,44,1,0,
-      0,0,46,47,1,0,0,0,47,49,1,0,0,0,48,46,1,0,0,0,49,50,5,6,0,0,50,7,1,
-      0,0,0,51,52,5,8,0,0,52,57,5,13,0,0,53,54,5,9,0,0,54,56,5,13,0,0,55,
-      53,1,0,0,0,56,59,1,0,0,0,57,55,1,0,0,0,57,58,1,0,0,0,58,60,1,0,0,0,
-      59,57,1,0,0,0,60,61,5,10,0,0,61,62,5,16,0,0,62,9,1,0,0,0,63,65,3,12,
-      6,0,64,63,1,0,0,0,65,66,1,0,0,0,66,64,1,0,0,0,66,67,1,0,0,0,67,11,
-      1,0,0,0,68,71,5,11,0,0,69,72,5,14,0,0,70,72,3,14,7,0,71,69,1,0,0,0,
-      71,70,1,0,0,0,72,13,1,0,0,0,73,74,5,5,0,0,74,76,5,14,0,0,75,77,5,12,
-      0,0,76,75,1,0,0,0,76,77,1,0,0,0,77,78,1,0,0,0,78,79,5,6,0,0,79,15,
-      1,0,0,0,9,17,20,34,44,46,57,66,71,76
+      4,1,18,83,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,
+      2,7,7,7,1,0,3,0,18,8,0,1,0,5,0,21,8,0,10,0,12,0,24,9,0,1,0,1,0,1,1,
+      1,1,1,1,1,1,1,2,1,2,1,2,1,2,5,2,36,8,2,10,2,12,2,39,9,2,1,2,1,2,1,
+      3,1,3,1,3,1,3,1,3,5,3,48,8,3,10,3,12,3,51,9,3,1,3,1,3,1,4,1,4,1,4,
+      1,4,5,4,59,8,4,10,4,12,4,62,9,4,1,4,1,4,1,5,4,5,67,8,5,11,5,12,5,68,
+      1,6,1,6,1,6,3,6,74,8,6,1,7,1,7,1,7,3,7,79,8,7,1,7,1,7,1,7,0,0,8,0,
+      2,4,6,8,10,12,14,0,1,1,0,4,5,83,0,17,1,0,0,0,2,27,1,0,0,0,4,31,1,0,
+      0,0,6,42,1,0,0,0,8,54,1,0,0,0,10,66,1,0,0,0,12,70,1,0,0,0,14,75,1,
+      0,0,0,16,18,3,2,1,0,17,16,1,0,0,0,17,18,1,0,0,0,18,22,1,0,0,0,19,21,
+      3,4,2,0,20,19,1,0,0,0,21,24,1,0,0,0,22,20,1,0,0,0,22,23,1,0,0,0,23,
+      25,1,0,0,0,24,22,1,0,0,0,25,26,5,0,0,1,26,1,1,0,0,0,27,28,5,1,0,0,
+      28,29,5,2,0,0,29,30,5,15,0,0,30,3,1,0,0,0,31,32,5,3,0,0,32,33,7,0,
+      0,0,33,37,5,6,0,0,34,36,3,6,3,0,35,34,1,0,0,0,36,39,1,0,0,0,37,35,
+      1,0,0,0,37,38,1,0,0,0,38,40,1,0,0,0,39,37,1,0,0,0,40,41,5,7,0,0,41,
+      5,1,0,0,0,42,43,5,8,0,0,43,44,3,10,5,0,44,49,5,6,0,0,45,48,3,8,4,0,
+      46,48,3,6,3,0,47,45,1,0,0,0,47,46,1,0,0,0,48,51,1,0,0,0,49,47,1,0,
+      0,0,49,50,1,0,0,0,50,52,1,0,0,0,51,49,1,0,0,0,52,53,5,7,0,0,53,7,1,
+      0,0,0,54,55,5,9,0,0,55,60,5,13,0,0,56,57,5,10,0,0,57,59,5,13,0,0,58,
+      56,1,0,0,0,59,62,1,0,0,0,60,58,1,0,0,0,60,61,1,0,0,0,61,63,1,0,0,0,
+      62,60,1,0,0,0,63,64,5,16,0,0,64,9,1,0,0,0,65,67,3,12,6,0,66,65,1,0,
+      0,0,67,68,1,0,0,0,68,66,1,0,0,0,68,69,1,0,0,0,69,11,1,0,0,0,70,73,
+      5,11,0,0,71,74,5,14,0,0,72,74,3,14,7,0,73,71,1,0,0,0,73,72,1,0,0,0,
+      74,13,1,0,0,0,75,76,5,6,0,0,76,78,5,14,0,0,77,79,5,12,0,0,78,77,1,
+      0,0,0,78,79,1,0,0,0,79,80,1,0,0,0,80,81,5,7,0,0,81,15,1,0,0,0,9,17,
+      22,37,47,49,60,68,73,78
   ];
 
   static final ATN _ATN =
@@ -348,7 +357,8 @@ class FirestoreRulesParser extends Parser {
 class RulesDefinitionContext extends ParserRuleContext {
   TerminalNode? EOF() => getToken(FirestoreRulesParser.TOKEN_EOF, 0);
   RulesVersionContext? rulesVersion() => getRuleContext<RulesVersionContext>(0);
-  ServiceContext? service() => getRuleContext<ServiceContext>(0);
+  List<ServiceContext> services() => getRuleContexts<ServiceContext>();
+  ServiceContext? service(int i) => getRuleContext<ServiceContext>(i);
   RulesDefinitionContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
   @override
   int get ruleIndex => RULE_rulesDefinition;
@@ -378,6 +388,7 @@ class RulesVersionContext extends ParserRuleContext {
 }
 
 class ServiceContext extends ParserRuleContext {
+  Token? serviceName;
   List<MatcherContext> matchers() => getRuleContexts<MatcherContext>();
   MatcherContext? matcher(int i) => getRuleContext<MatcherContext>(i);
   ServiceContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
@@ -413,9 +424,9 @@ class MatcherContext extends ParserRuleContext {
 }
 
 class AllowContext extends ParserRuleContext {
-  List<TerminalNode> ACCESSs() => getTokens(FirestoreRulesParser.TOKEN_ACCESS);
-  TerminalNode? ACCESS(int i) => getToken(FirestoreRulesParser.TOKEN_ACCESS, i);
-  TerminalNode? CES_EXPRESSION() => getToken(FirestoreRulesParser.TOKEN_CES_EXPRESSION, 0);
+  List<TerminalNode> METHODs() => getTokens(FirestoreRulesParser.TOKEN_METHOD);
+  TerminalNode? METHOD(int i) => getToken(FirestoreRulesParser.TOKEN_METHOD, i);
+  TerminalNode? CEL() => getToken(FirestoreRulesParser.TOKEN_CEL, 0);
   AllowContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
   @override
   int get ruleIndex => RULE_allow;

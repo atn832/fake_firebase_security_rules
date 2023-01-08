@@ -1,0 +1,1 @@
+antlr4 -o ../lib/src/gen -Dlanguage=Dart FirestoreRules.g4
