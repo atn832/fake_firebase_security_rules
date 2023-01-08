@@ -308,7 +308,7 @@ class FirestoreRulesParser extends Parser {
       _la = tokenStream.LA(1)!;
       if (_la == TOKEN_T__11) {
         state = 77;
-        match(TOKEN_T__11);
+        _localctx.wildcard = match(TOKEN_T__11);
       }
 
       state = 80;
@@ -473,6 +473,7 @@ class PathSegmentContext extends ParserRuleContext {
 }
 
 class VariableContext extends ParserRuleContext {
+  Token? wildcard;
   TerminalNode? NAME() => getToken(FirestoreRulesParser.TOKEN_NAME, 0);
   VariableContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
   @override
