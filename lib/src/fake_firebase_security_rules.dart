@@ -1,4 +1,4 @@
-import 'package:fake_firebase_security_rules/src/access_type.dart';
+import 'package:fake_firebase_security_rules/src/method.dart';
 import 'package:fake_firebase_security_rules/src/parser.dart';
 import 'package:fake_firebase_security_rules/src/service.dart';
 
@@ -8,7 +8,7 @@ class FakeFirebaseSecurityRules {
 
   final Service service;
 
-  bool isAllowed(String path, AccessType accessType) {
+  bool isAllowed(String path, Method method) {
     // TODO: populate `request` and `resource`.
     // https://firebase.google.com/docs/rules/rules-language#building_conditions
     // https://firebase.google.com/docs/reference/rules/rules.firestore.Request
@@ -20,7 +20,7 @@ class FakeFirebaseSecurityRules {
     // TODO: populate `request` with `auth`.
     // https://firebase.google.com/docs/rules/rules-and-auth
     for (final match in service.pathMatches) {
-      if (match.isAllowed(path, accessType)) {
+      if (match.isAllowed(path, method)) {
         return true;
       }
     }

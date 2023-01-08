@@ -1,5 +1,5 @@
 import 'package:fake_firebase_security_rules/fake_firebase_security_rules.dart';
-import 'package:fake_firebase_security_rules/src/access_type.dart';
+import 'package:fake_firebase_security_rules/src/method.dart';
 import 'package:fake_firebase_security_rules/src/parser.dart';
 import 'package:fake_firebase_security_rules/src/path_segment.dart';
 import 'package:test/test.dart';
@@ -61,21 +61,16 @@ void main() {
 
     test('isAllowed', () {
       final securityRules = FakeFirebaseSecurityRules(securityRulesDescription);
-      expect(
-          securityRules.isAllowed(
-              '/databases/users/documents', AccessType.read),
+      expect(securityRules.isAllowed('/databases/users/documents', Method.read),
           isTrue);
       expect(
-          securityRules.isAllowed(
-              '/databases/users/documents', AccessType.write),
+          securityRules.isAllowed('/databases/users/documents', Method.write),
           isFalse);
     });
     test('partial and complete matches', () {
       final securityRules =
           FakeFirebaseSecurityRules(completeAndPartialMatchesDescription);
-      expect(
-          securityRules.isAllowed(
-              '/example/hello/nested/path', AccessType.read),
+      expect(securityRules.isAllowed('/example/hello/nested/path', Method.read),
           isTrue);
     });
   });

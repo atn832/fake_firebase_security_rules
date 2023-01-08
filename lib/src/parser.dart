@@ -1,6 +1,6 @@
 import 'package:antlr4/antlr4.dart';
 import 'package:cel/cel.dart';
-import 'package:fake_firebase_security_rules/src/access_type.dart';
+import 'package:fake_firebase_security_rules/src/method.dart';
 import 'package:fake_firebase_security_rules/src/gen/FirestoreRulesLexer.dart';
 import 'package:fake_firebase_security_rules/src/gen/FirestoreRulesParser.dart';
 import 'package:fake_firebase_security_rules/src/path_match.dart';
@@ -47,7 +47,7 @@ AllowStatement visitAllowRule(AllowContext allow) {
   final program = Program(environment, ast);
   return AllowStatement(
       allow.ACCESSs()
-          .map((node) => AccessType.fromNameInFirebase(node.text!))
+          .map((node) => Method.fromNameInFirebase(node.text!))
           .toList(),
       program);
 }

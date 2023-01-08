@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:cel/cel.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fake_firebase_security_rules/src/access_type.dart';
+import 'package:fake_firebase_security_rules/src/method.dart';
 import 'package:fake_firebase_security_rules/src/path_segment.dart';
 import 'package:tuple/tuple.dart';
 
@@ -37,7 +37,7 @@ class PathMatch extends Equatable {
   final List<AllowStatement> allowStatements;
   final List<PathMatch> children;
 
-  bool isAllowed(String path, AccessType accessType) {
+  bool isAllowed(String path, Method method) {
     print('isAllowed $path $pathSegments');
     // if partiallyMatches, check children.
     if (pathSegments.partiallyMatches(path)) {
@@ -45,7 +45,7 @@ class PathMatch extends Equatable {
       final subPath = '/' +
           path.substring(1).split('/').sublist(pathSegments.length).join('/');
       for (final child in children) {
-        if (child.isAllowed(subPath, accessType)) {
+        if (child.isAllowed(subPath, method)) {
           return true;
         }
       }
@@ -54,7 +54,7 @@ class PathMatch extends Equatable {
       return false;
     }
     for (final allowStatement in allowStatements) {
-      if (allowStatement.item1.includes(accessType)) {
+      if (allowStatement.item1.includes(method)) {
         // evaluate the program.
         // TODO: add real inputs, eg Request, now...
         if (allowStatement.item2.evaluate({})) {
@@ -72,4 +72,4 @@ class PathMatch extends Equatable {
   bool? get stringify => true;
 }
 
-typedef AllowStatement = Tuple2<List<AccessType>, Program>;
+typedef AllowStatement = Tuple2<List<Method>, Program>;

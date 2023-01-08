@@ -3,4 +3,4 @@
 library firestore_rules;
 
 export 'src/fake_firebase_security_rules.dart';
-export 'src/access_type.dart';
+export 'src/method.dart';
