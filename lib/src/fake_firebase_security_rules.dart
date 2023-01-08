@@ -23,7 +23,7 @@ class FakeFirebaseSecurityRules {
     // TODO: populate `request` with `auth`.
     // https://firebase.google.com/docs/rules/rules-and-auth
     for (final match in service.pathMatches) {
-      if (match.isAllowed(path, method, auth: auth)) {
+      if (match.isAllowed(path, method, auth: auth, variables: {})) {
         return true;
       }
     }
