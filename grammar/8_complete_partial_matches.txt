@@ -1,0 +1,17 @@
+// Given request.path == /example/hello/nested/path the following
+// declarations indicate whether they are a partial or complete match and
+// the value of any variables visible within the scope.
+service cloud.firestore {
+  // Partial match.
+  match /example/{singleSegment} {   // `singleSegment` == 'hello'
+    allow write;                     // Write rule not evaluated.
+    // Complete match.
+    match /nested/path {             // `singleSegment` visible in scope.
+      allow read;                    // Read rule is evaluated.
+    }
+  }
+  // Complete match.
+  match /example/{multiSegment=**} { // `multiSegment` == /hello/nested/path
+    allow read;                      // Read rule is evaluated.
+  }
+}

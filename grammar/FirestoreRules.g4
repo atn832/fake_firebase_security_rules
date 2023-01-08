@@ -11,7 +11,7 @@ pathSegment: '/' (NAME|variable);
 NAME: [a-zA-Z0-9_-]+;
 variable: '{' NAME '=**'? '}';
 STRING: '\'' .*? '\'';
-CEL: ':' 'if'? .*? ';';
+CEL: (':' 'if'? .*?)? ';';
 
 WHITESPACE: (' ' | '\t' | '\r' | '\n')+ -> skip;
 COMMENT: '//' (~'\n')* -> skip;

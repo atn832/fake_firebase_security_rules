@@ -17,4 +17,7 @@ echo 6
 antlr4-parse FirestoreRules.g4 rulesDefinition -tree 6_single_read_write.txt
 echo 
 echo 7
-antlr4-parse FirestoreRules.g4 rulesDefinition -tree -tokens 7_request.auth.uid.txt
+antlr4-parse FirestoreRules.g4 rulesDefinition -tree 7_request.auth.uid.txt
+echo 
+echo 8
+antlr4-parse FirestoreRules.g4 rulesDefinition -tree -tokens 8_complete_partial_matches.txt
