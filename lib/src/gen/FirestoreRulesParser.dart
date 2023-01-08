@@ -5,7 +5,7 @@ import 'package:antlr4/antlr4.dart';
 import 'FirestoreRulesListener.dart';
 import 'FirestoreRulesBaseListener.dart';
 const int RULE_rulesDefinition = 0, RULE_rulesVersion = 1, RULE_service = 2, 
-          RULE_matchRule = 3, RULE_allow = 4, RULE_path = 5, RULE_pathSegment = 6, 
+          RULE_match = 3, RULE_allow = 4, RULE_path = 5, RULE_pathSegment = 6, 
           RULE_variable = 7;
 class FirestoreRulesParser extends Parser {
   static final checkVersion = () => RuntimeMetaData.checkVersion('4.11.1', RuntimeMetaData.VERSION);
@@ -22,8 +22,8 @@ class FirestoreRulesParser extends Parser {
 
   @override
   final List<String> ruleNames = [
-    'rulesDefinition', 'rulesVersion', 'service', 'matchRule', 'allow', 
-    'path', 'pathSegment', 'variable'
+    'rulesDefinition', 'rulesVersion', 'service', 'match', 'allow', 'path', 
+    'pathSegment', 'variable'
   ];
 
   static final List<String?> _LITERAL_NAMES = [
@@ -129,7 +129,7 @@ class FirestoreRulesParser extends Parser {
       _la = tokenStream.LA(1)!;
       while (_la == TOKEN_T__6) {
         state = 31;
-        matchRule();
+        match();
         state = 36;
         errorHandler.sync(this);
         _la = tokenStream.LA(1)!;
@@ -146,9 +146,9 @@ class FirestoreRulesParser extends Parser {
     return _localctx;
   }
 
-  MatchRuleContext matchRule() {
-    dynamic _localctx = MatchRuleContext(context, state);
-    enterRule(_localctx, 6, RULE_matchRule);
+  MatchContext match() {
+    dynamic _localctx = MatchContext(context, state);
+    enterRule(_localctx, 6, RULE_match);
     int _la;
     try {
       enterOuterAlt(_localctx, 1);
@@ -171,7 +171,7 @@ class FirestoreRulesParser extends Parser {
           break;
         case TOKEN_T__6:
           state = 43;
-          matchRule();
+          match();
           break;
         default:
           throw NoViableAltException(this);
@@ -378,8 +378,8 @@ class RulesVersionContext extends ParserRuleContext {
 }
 
 class ServiceContext extends ParserRuleContext {
-  List<MatchRuleContext> matchRules() => getRuleContexts<MatchRuleContext>();
-  MatchRuleContext? matchRule(int i) => getRuleContext<MatchRuleContext>(i);
+  List<MatchContext> matchs() => getRuleContexts<MatchContext>();
+  MatchContext? match(int i) => getRuleContext<MatchContext>(i);
   ServiceContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
   @override
   int get ruleIndex => RULE_service;
@@ -393,22 +393,22 @@ class ServiceContext extends ParserRuleContext {
   }
 }
 
-class MatchRuleContext extends ParserRuleContext {
+class MatchContext extends ParserRuleContext {
   PathContext? path() => getRuleContext<PathContext>(0);
   List<AllowContext> allows() => getRuleContexts<AllowContext>();
   AllowContext? allow(int i) => getRuleContext<AllowContext>(i);
-  List<MatchRuleContext> matchRules() => getRuleContexts<MatchRuleContext>();
-  MatchRuleContext? matchRule(int i) => getRuleContext<MatchRuleContext>(i);
-  MatchRuleContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  List<MatchContext> matchs() => getRuleContexts<MatchContext>();
+  MatchContext? match(int i) => getRuleContext<MatchContext>(i);
+  MatchContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
   @override
-  int get ruleIndex => RULE_matchRule;
+  int get ruleIndex => RULE_match;
   @override
   void enterRule(ParseTreeListener listener) {
-    if (listener is FirestoreRulesListener) listener.enterMatchRule(this);
+    if (listener is FirestoreRulesListener) listener.enterMatch(this);
   }
   @override
   void exitRule(ParseTreeListener listener) {
-    if (listener is FirestoreRulesListener) listener.exitMatchRule(this);
+    if (listener is FirestoreRulesListener) listener.exitMatch(this);
   }
 }
 

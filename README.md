@@ -53,11 +53,17 @@ void main(List<String> args) async {
 dart example/firestore_rules_example.dart grammars/6_single_read_write.txt
 ```
 
-## Generating the parser
+## Working on the grammar
+
+### Trying out the rules
+
+The fastest way to get your environment up and running is to create a [Codespace](https://github.com/features/codespaces) on the repository, then `pip install antlr4-tools`. Once this is done, you can run `antlr4-parse` to try out the rules against some inputs and `antlr4` to regenerate the Parser in `lib/src/parser/gen`.
+
+### Generating the parser
 
 ```sh
 cd grammar
-antlr -Dlanguage=Dart FirestoreRules.g4
+antlr4 -o ../lib/src/gen -Dlanguage=Dart FirestoreRules.g4
 ```
 
 ## Features

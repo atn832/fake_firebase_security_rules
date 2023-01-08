@@ -36,11 +36,11 @@ class FirestoreRulesBaseListener implements FirestoreRulesListener {
 
   /// The default implementation does nothing.
   @override
-  void enterMatchRule(MatchRuleContext ctx) {}
+  void enterMatch(MatchContext ctx) {}
 
   /// The default implementation does nothing.
   @override
-  void exitMatchRule(MatchRuleContext ctx) {}
+  void exitMatch(MatchContext ctx) {}
 
   /// The default implementation does nothing.
   @override

@@ -14,4 +14,7 @@ echo 5
 antlr4-parse FirestoreRules.g4 rulesDefinition -tree 5_recursive_wildcard.txt
 echo 
 echo 6
-antlr4-parse FirestoreRules.g4 rulesDefinition -tree -tokens 6_single_read_write.txt
+antlr4-parse FirestoreRules.g4 rulesDefinition -tree 6_single_read_write.txt
+echo 
+echo 7
+antlr4-parse FirestoreRules.g4 rulesDefinition -tree -tokens 7_request.auth.uid.txt

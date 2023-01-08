@@ -8,8 +8,7 @@ allow: 'allow' ACCESS (',' ACCESS)* ':' CES_EXPRESSION;
 ACCESS: 'read' | 'write';
 path: pathSegment+;
 pathSegment: '/' (NAME|variable);
-// TODO: support underscores etc.
-NAME: [a-z0-9]+;
+NAME: [a-zA-Z0-9_-]+;
 variable: '{' NAME '=**'? '}';
 STRING: '\'' .*? '\'';
 CES_EXPRESSION: 'if' (~'\n')+ | ('true'|'false') ';';
