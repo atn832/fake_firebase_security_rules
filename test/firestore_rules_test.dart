@@ -120,5 +120,18 @@ void main() {
               auth: {'uid': uid}),
           isTrue);
     });
+
+    test('wildcards', () {
+      final securityRules = FakeFirebaseSecurityRules(wildcardDescription);
+      expect(
+          securityRules.isAllowed(
+              '/databases/db1/documents/cities/paris', Method.read),
+          isTrue);
+      expect(
+          securityRules.isAllowed(
+              '/databases/db1/documents/cities/paris/arrondissement14',
+              Method.read),
+          isTrue);
+    });
   });
 }

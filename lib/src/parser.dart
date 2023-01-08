@@ -7,6 +7,7 @@ import 'package:fake_firebase_security_rules/src/path_match.dart';
 import 'package:fake_firebase_security_rules/src/path_segment/const_path_segment.dart';
 import 'package:fake_firebase_security_rules/src/path_segment/path_segment.dart';
 import 'package:fake_firebase_security_rules/src/path_segment/variable_path_segment.dart';
+import 'package:fake_firebase_security_rules/src/path_segment/wildcard_path_segment.dart';
 import 'package:fake_firebase_security_rules/src/service.dart';
 
 /// Parses a [String] describing a service to a [Service] wrapping [PathMatch]
@@ -76,7 +77,11 @@ List<PathSegment> visitPath(PathContext path) {
 }
 
 PathSegment visitPathSegment(PathSegmentContext s) {
-  return s.NAME() != null
-      ? ConstPathSegment(s.NAME()!.text!)
-      : VariablePathSegment(s.variable()!.NAME()!.text!);
+  if (s.NAME() != null) {
+    return ConstPathSegment(s.NAME()!.text!);
+  }
+  final variableName = s.variable()!.NAME()!.text!;
+  return s.variable()!.wildcard != null
+      ? WildcardPathSegment(variableName)
+      : VariablePathSegment(variableName);
 }
