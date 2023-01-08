@@ -4,7 +4,9 @@ import 'package:fake_firebase_security_rules/src/method.dart';
 import 'package:fake_firebase_security_rules/src/gen/FirestoreRulesLexer.dart';
 import 'package:fake_firebase_security_rules/src/gen/FirestoreRulesParser.dart';
 import 'package:fake_firebase_security_rules/src/path_match.dart';
-import 'package:fake_firebase_security_rules/src/path_segment.dart';
+import 'package:fake_firebase_security_rules/src/path_segment/const_path_segment.dart';
+import 'package:fake_firebase_security_rules/src/path_segment/path_segment.dart';
+import 'package:fake_firebase_security_rules/src/path_segment/variable_path_segment.dart';
 import 'package:fake_firebase_security_rules/src/service.dart';
 
 /// Parses a [String] describing a service to a [Service] wrapping [PathMatch]

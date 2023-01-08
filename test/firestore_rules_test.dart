@@ -1,6 +1,8 @@
 import 'package:fake_firebase_security_rules/fake_firebase_security_rules.dart';
 import 'package:fake_firebase_security_rules/src/parser.dart';
-import 'package:fake_firebase_security_rules/src/path_segment.dart';
+import 'package:fake_firebase_security_rules/src/path_segment/const_path_segment.dart';
+import 'package:fake_firebase_security_rules/src/path_segment/path_segment.dart';
+import 'package:fake_firebase_security_rules/src/path_segment/variable_path_segment.dart';
 import 'package:test/test.dart';
 
 final securityRulesDescription = '''service cloud.firestore {
@@ -44,6 +46,18 @@ service cloud.firestore {
   }
 }''';
 
+final wildcardDescription = '''
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Matches any document in the cities collection as well as any document
+    // in a subcollection.
+    match /cities/{document=**} {
+      allow read, write: true;
+    }
+  }
+}
+''';
+
 void main() {
   group('Parser', () {
     test('parse', () {
@@ -68,6 +82,11 @@ void main() {
     });
     test('authUidDescription', () {
       final service = Parser().parse(authUidDescription);
+      print(service);
+    });
+
+    test('wildcardDescription', () {
+      final service = Parser().parse(wildcardDescription);
       print(service);
     });
   });
