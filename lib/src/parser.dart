@@ -44,9 +44,9 @@ AllowStatement visitAllowRule(AllowContext allow) {
   // The CEL might start with ':' and potentially 'if' and always ends with ';'.
   // Remove them.
   final celCode = cleanUpCEL(allow.CEL()?.text);
-  final environment = Environment();
+  final environment = Environment.standard();
   final ast = environment.compile(celCode);
-  final program = Program(environment, ast);
+  final program = environment.makeProgram(ast);
   return AllowStatement(
       allow.METHODs()
           .map((node) => Method.fromNameInFirebase(node.text!))

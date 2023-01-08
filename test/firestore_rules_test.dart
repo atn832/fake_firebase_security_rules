@@ -1,7 +1,6 @@
 import 'package:fake_firebase_security_rules/fake_firebase_security_rules.dart';
 import 'package:fake_firebase_security_rules/src/parser.dart';
 import 'package:fake_firebase_security_rules/src/path_segment/const_path_segment.dart';
-import 'package:fake_firebase_security_rules/src/path_segment/path_segment.dart';
 import 'package:fake_firebase_security_rules/src/path_segment/variable_path_segment.dart';
 import 'package:test/test.dart';
 
@@ -55,7 +54,7 @@ service cloud.firestore {
       allow read, write: true;
     }
     match /languages/{regions=**}/city/{city} {
-      allow read: if city == 'paris';
+      allow read: if city in ['paris', 'london'];
     }
   }
 }
@@ -124,7 +123,7 @@ void main() {
           isTrue);
     });
 
-    test('wildcards', () {
+    test('wildcards and in', () {
       final securityRules = FakeFirebaseSecurityRules(wildcardDescription);
       expect(
           securityRules.isAllowed(
