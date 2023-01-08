@@ -3,9 +3,9 @@ rulesDefinition: rulesVersion? service? EOF;
 rulesVersion: 'rules_version' '=' STRING;
 service: 'service' 'cloud.firestore' '{' matcher* '}';
 matcher: 'match' path '{' (allow|matcher)* '}';
-allow: 'allow' ACCESS (',' ACCESS)* ':' CES_EXPRESSION;
+allow: 'allow' METHOD (',' METHOD)* ':' CES_EXPRESSION;
 
-ACCESS: 'read' | 'write';
+METHOD: 'read' | 'write';
 path: pathSegment+;
 pathSegment: '/' (NAME|variable);
 NAME: [a-zA-Z0-9_-]+;
