@@ -4,7 +4,9 @@ import 'package:fake_firebase_security_rules/src/service.dart';
 
 class FakeFirebaseSecurityRules {
   FakeFirebaseSecurityRules(String securityRules)
-      : service = Parser().parse(securityRules);
+      : service = Parser()
+            .parse(securityRules)
+            .firstWhere((service) => service.name == 'cloud.firestore');
 
   final Service service;
 
