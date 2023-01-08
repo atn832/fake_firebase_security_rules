@@ -51,16 +51,22 @@ AllowStatement visitAllowRule(AllowContext allow) {
       program);
 }
 
+/// Extensions to help clean up CEL.
+extension on String {
+  String removeStarting(String s) {
+    return startsWith(s) ? substring(s.length, length).trim() : this;
+  }
+
+  String removeTrailing(String s) {
+    return endsWith(s) ? substring(0, length - s.length).trim() : this;
+  }
+}
+
 String cleanUpCEL(String? cel) {
-  if (cel == null) {
+  if (cel == null || cel.removeTrailing(';').isEmpty) {
     return 'true';
   }
-  // Remove the starting ':'.
-  // Remove the starting 'if' if it exists.
-  final start = cel.startsWith(': if') ? 5 : 2;
-  // Remove the trailing ';'.
-  final end = cel.length - 1;
-  return cel.substring(start, end);
+  return cel.removeStarting(':').removeStarting('if').removeTrailing(';');
 }
 
 List<PathSegment> visitPath(PathContext path) {
