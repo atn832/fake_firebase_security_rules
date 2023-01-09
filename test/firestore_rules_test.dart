@@ -221,5 +221,17 @@ void main() {
               variables: variables),
           isFalse);
     });
+    test('null exceptions', () async {
+      final securityRules = FakeFirebaseSecurityRules(claimsDefinition);
+      final variables = {
+        'request': {'auth': null}
+      };
+      // No token, it triggers a null exception, and should be interpreted as
+      // false.
+      expect(
+          securityRules.isAllowed('databases/db1/documents', Method.write,
+              variables: variables),
+          isFalse);
+    });
   });
 }

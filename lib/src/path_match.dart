@@ -60,13 +60,20 @@ class PathMatch extends Equatable {
         for (final allowStatement in allowStatements) {
           if (allowStatement.item1.includes(method)) {
             // Evaluate the program.
-            if (allowStatement.item2.evaluate({
-              // Put variables
-              ...variables,
-              // and new variables first...
-              ...potentialMatch.variables,
-            })) {
-              return true;
+            try {
+              if (allowStatement.item2.evaluate({
+                // Put variables
+                ...variables,
+                // and new variables first...
+                ...potentialMatch.variables,
+              })) {
+                return true;
+              }
+            } catch (e) {
+              // If an evaluation throws an error, such as on null exceptions,
+              // fail silently and try other matches.
+              print('Evaluated to not allowed because of exception.');
+              print(e);
             }
           }
         }
