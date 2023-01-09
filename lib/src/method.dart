@@ -15,6 +15,8 @@ enum Method {
   final String nameInFirebase;
   final Set<Method> alsoIncludes;
 
+  /// Returns whether a method encompasses the given method. For example `write`
+  /// not only includes itself, but also includes `list` and `delete`.
   bool includes(Method m) {
     return m == this || alsoIncludes.contains(m);
   }
