@@ -11,9 +11,11 @@ class FakeFirebaseSecurityRules {
 
   final Service service;
 
-  /// Evaluates whether an operation is allowed or not.
+  /// Evaluates whether an operation is allowed or not. `path` is the full path
+  /// from root without a starting '/'.
   bool isAllowed(String path, Method method,
       {Map<String, dynamic> variables = const {}}) {
+    assert(!path.startsWith('/'));
     for (final match in service.pathMatches) {
       if (match.isAllowed(path.concretePathSegments, method,
           variables: variables)) {

@@ -146,16 +146,15 @@ void main() {
 
     test('isAllowed', () {
       final securityRules = FakeFirebaseSecurityRules(securityRulesDescription);
-      expect(securityRules.isAllowed('/databases/users/documents', Method.read),
+      expect(securityRules.isAllowed('databases/users/documents', Method.read),
           isTrue);
-      expect(
-          securityRules.isAllowed('/databases/users/documents', Method.write),
+      expect(securityRules.isAllowed('databases/users/documents', Method.write),
           isFalse);
     });
     test('partial and complete matches', () {
       final securityRules =
           FakeFirebaseSecurityRules(completeAndPartialMatchesDescription);
-      expect(securityRules.isAllowed('/example/hello/nested/path', Method.read),
+      expect(securityRules.isAllowed('example/hello/nested/path', Method.read),
           isTrue);
     });
 
@@ -164,7 +163,7 @@ void main() {
       final uid = 'a57293b';
       expect(
           securityRules.isAllowed(
-              '/databases/some-database/documents/users/$uid', Method.read,
+              'databases/some-database/documents/users/$uid', Method.read,
               variables: {
                 'request': {
                   'auth': {'uid': uid}
@@ -177,21 +176,21 @@ void main() {
       final securityRules = FakeFirebaseSecurityRules(wildcardDescription);
       expect(
           securityRules.isAllowed(
-              '/databases/db1/documents/cities/paris', Method.read),
+              'databases/db1/documents/cities/paris', Method.read),
           isTrue);
       expect(
           securityRules.isAllowed(
-              '/databases/db1/documents/cities/paris/arrondissement14',
+              'databases/db1/documents/cities/paris/arrondissement14',
               Method.read),
           isTrue);
       expect(
           securityRules.isAllowed(
-              '/databases/db1/documents/languages/france/idf/city/paris',
+              'databases/db1/documents/languages/france/idf/city/paris',
               Method.read),
           isTrue);
       expect(
           securityRules.isAllowed(
-              '/databases/db1/documents/languages/france/idf/city/lyon',
+              'databases/db1/documents/languages/france/idf/city/lyon',
               Method.read),
           isFalse);
     });
@@ -207,19 +206,18 @@ void main() {
       };
       // Can write the root.
       expect(
-          securityRules.isAllowed('/databases/db1/documents', Method.write,
+          securityRules.isAllowed('databases/db1/documents', Method.write,
               variables: variables),
           isTrue);
       // Cannot access outside the root.
       expect(
-          securityRules.isAllowed(
-              '/databases/db1/other-documents', Method.write,
+          securityRules.isAllowed('databases/db1/other-documents', Method.write,
               variables: variables),
           isFalse);
       // Cannot write because admin is not a writer.
       expect(
           securityRules.isAllowed(
-              '/databases/db1/documents/some_collection/painting', Method.write,
+              'databases/db1/documents/some_collection/painting', Method.write,
               variables: variables),
           isFalse);
     });

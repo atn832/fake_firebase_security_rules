@@ -40,7 +40,7 @@ extension on List<PathSegment> {
 }
 
 extension PathSegments on String {
-  get concretePathSegments => substring(1).split('/');
+  List<String> get concretePathSegments => split('/');
 }
 
 class PathMatch extends Equatable {

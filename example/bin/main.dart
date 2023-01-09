@@ -11,10 +11,10 @@ final securityRulesDescription = '''service cloud.firestore {
 void main(List<String> args) async {
   final securityRules = FakeFirebaseSecurityRules(securityRulesDescription);
   // Prints out `false`.
-  print(securityRules.isAllowed('/databases/users/documents', Method.write));
+  print(securityRules.isAllowed('databases/users/documents', Method.write));
   // Prints out `true`.
-  print(securityRules.isAllowed('/databases/users/documents', Method.read));
+  print(securityRules.isAllowed('databases/users/documents', Method.read));
   // Prints out `false`.
   print(securityRules.isAllowed(
-      '/databases/users/documents/too-deep', Method.read));
+      'databases/users/documents/too-deep', Method.read));
 }
