@@ -3,9 +3,9 @@
 [![pub package](https://img.shields.io/pub/v/fake_firebase_security_rules.svg)](https://pub.dartlang.org/packages/fake_firebase_security_rules)
 [![Tests](https://github.com/atn832/fake_firebase_security_rules/actions/workflows/dart.yml/badge.svg)](https://github.com/atn832/fake_firebase_security_rules/actions/workflows/dart.yml)
 
-This project simulates Firebase Security Rules. It is meant to be used by [Fake Cloud Firestore](https://pub.dev/packages/fake_cloud_firestore) and [Firebase Storage Mocks](https://pub.dev/packages/firebase_storage_mocks). Given these request inputs:
+This project simulates [Firebase Security Rules](https://firebase.google.com/docs/rules). It is meant to be used by [Fake Cloud Firestore](https://pub.dev/packages/fake_cloud_firestore) and [Firebase Storage Mocks](https://pub.dev/packages/firebase_storage_mocks). Given these request inputs:
 
-* Firebase security rules, eg.:
+* Firebase security rules such as:
 
 ```
 service cloud.firestore {
@@ -16,7 +16,7 @@ service cloud.firestore {
 ```
 
 * Concrete path, access method, eg an `update` on `/users/abcd/documents`,
-* Variables, eg `request` object,
+* Variables, eg a `Map` such as `{'request': { 'auth': { 'uid': 'efgh' } } }`,
 
 the library computes whether the request should be allowed or not.
 
