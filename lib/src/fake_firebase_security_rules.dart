@@ -11,6 +11,7 @@ class FakeFirebaseSecurityRules {
 
   final Service service;
 
+  /// Evaluates whether an operation is allowed or not.
   bool isAllowed(String path, Method method,
       {Map<String, dynamic> variables = const {}}) {
     for (final match in service.pathMatches) {
