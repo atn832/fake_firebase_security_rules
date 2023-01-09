@@ -59,8 +59,7 @@ class PathMatch extends Equatable {
         // Full match.
         for (final allowStatement in allowStatements) {
           if (allowStatement.item1.includes(method)) {
-            // evaluate the program.
-            // TODO: add real inputs, eg Request, now...
+            // Evaluate the program.
             if (allowStatement.item2.evaluate({
               // Put variables
               ...variables,
