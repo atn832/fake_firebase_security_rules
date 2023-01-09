@@ -46,6 +46,8 @@ void main(List<String> args) async {
 }
 ```
 
+See the [Unit tests](https://github.com/atn832/fake_firebase_security_rules/blob/main/test/firestore_rules_test.dart) for more advanced examples of usage.
+
 ## Features
 
 Supports:
