@@ -60,6 +60,26 @@ service cloud.firestore {
 }
 ''';
 
+// https://firebase.google.com/docs/rules/rules-and-auth#define_custom_user_information
+// Everyone can read /databases/{database}/documents, but only admins can write.
+// In /databases/{database}/documents/some_collection/{document}, only writers
+// can write and only readers can read.
+const claimsDefinition = '''
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // For attribute-based access control, check for an admin claim
+    allow write: if request.auth.token.admin == true;
+    allow read: true;
+
+    // Alternatively, for role-based access, assign specific roles to users
+    match /some_collection/{document} {
+      allow read: if request.auth.token.reader == true;
+      allow write: if request.auth.token.writer == true;
+    }
+  }
+}
+''';
+
 void main() {
   group('Parser', () {
     test('parse', () {
@@ -173,6 +193,34 @@ void main() {
           securityRules.isAllowed(
               '/databases/db1/documents/languages/france/idf/city/lyon',
               Method.read),
+          isFalse);
+    });
+
+    test('recursive custom claims', () async {
+      final securityRules = FakeFirebaseSecurityRules(claimsDefinition);
+      final variables = {
+        'request': {
+          'auth': {
+            'token': {'admin': true}
+          }
+        }
+      };
+      // Can write the root.
+      expect(
+          securityRules.isAllowed('/databases/db1/documents', Method.write,
+              variables: variables),
+          isTrue);
+      // Cannot access outside the root.
+      expect(
+          securityRules.isAllowed(
+              '/databases/db1/other-documents', Method.write,
+              variables: variables),
+          isFalse);
+      // Cannot write because admin is not a writer.
+      expect(
+          securityRules.isAllowed(
+              '/databases/db1/documents/some_collection/painting', Method.write,
+              variables: variables),
           isFalse);
     });
   });
