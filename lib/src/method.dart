@@ -4,13 +4,13 @@ extension Includes on List<Method> {
 
 /// Based on https://firebase.google.com/docs/rules/rules-language#method.
 enum Method {
-  read('read', {Method.list}),
-  write('write', {Method.update, Method.delete}),
+  read('read', alsoIncludes: {Method.list}),
+  write('write', alsoIncludes: {Method.update, Method.delete}),
   update('update'),
   delete('delete'),
   list('list');
 
-  const Method(this.nameInFirebase, [this.alsoIncludes = const {}]);
+  const Method(this.nameInFirebase, {this.alsoIncludes = const {}});
 
   final String nameInFirebase;
   final Set<Method> alsoIncludes;
