@@ -2,6 +2,7 @@ import 'package:fake_firebase_security_rules/fake_firebase_security_rules.dart';
 import 'package:fake_firebase_security_rules/src/parser.dart';
 import 'package:fake_firebase_security_rules/src/path_segment/const_path_segment.dart';
 import 'package:fake_firebase_security_rules/src/path_segment/variable_path_segment.dart';
+import 'package:logger/logger.dart';
 import 'package:test/test.dart';
 
 final securityRulesDescription = '''service cloud.firestore {
@@ -79,6 +80,73 @@ service cloud.firestore {
   }
 }
 ''';
+
+// https://firebase.google.com/docs/rules/data-validation
+const unsupportedResourceDefinition = '''
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow the user to read data if the document has the 'visibility'
+    // field set to 'public'
+    match /cities/{city} {
+      allow read: if resource.data.visibility == 'public';
+    }
+  }
+}''';
+// https://firebase.google.com/docs/rules/insecure-rules
+const unsupportedRequestResourceDefinition = '''
+// Content owner only
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow only authenticated content owners access
+    match /some_collection/{document} {
+      allow read, write: if request.auth != null && request.auth.uid == request.resource.data.author_uid
+    }
+  }
+}''';
+const unsupportedGetDefinition = '''
+// Role-based access
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Assign roles to all users and refine access based on user roles
+    match /some_collection/{document} {
+     allow read: if get(/databases/\$(database)/documents/users/\$(request.auth.uid)).data.role == "Reader"
+     allow write: if get(/databases/\$(database)/documents/users/\$(request.auth.uid)).data.role == "Writer"
+
+     // Note: Checking for roles in your database using `get` (as in the code
+     // above) or `exists` carry standard charges for read operations.
+    }
+  }
+}''';
+
+// https://firebase.google.com/docs/rules/rules-language#function
+const unsupportedFunctionDefinition = '''
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // True if the user is signed in or the requested data is 'public'
+    function signedInOrPublic() {
+      return request.auth.uid != null || resource.data.visibility == 'public';
+    }
+
+    match /cities/{city} {
+      allow read, write: if signedInOrPublic();
+    }
+
+    match /users/{user} {
+      allow read, write: if signedInOrPublic();
+    }
+  }
+}''';
+
+const unsupportedTimestampDefinition = '''
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if
+          request.time < timestamp.date(2023, 11, 20);
+    }
+  }
+}''';
 
 void main() {
   group('Parser', () {
@@ -229,17 +297,35 @@ void main() {
               variables: variables),
           isFalse);
     });
-    test('null exceptions', () async {
-      final securityRules = FakeFirebaseSecurityRules(claimsDefinition);
-      final variables = {
-        'request': {'auth': null}
-      };
-      // No token, it triggers a null exception, and should be interpreted as
-      // false.
-      expect(
-          securityRules.isAllowed('databases/db1/documents', Method.write,
-              variables: variables),
-          isFalse);
+    group('warnings show up nicely', () {
+      test('null exceptions', () async {
+        final securityRules = FakeFirebaseSecurityRules(claimsDefinition);
+        final variables = {
+          'request': {'auth': null}
+        };
+        // No token, it triggers a null exception, and should be interpreted as
+        // false.
+        expect(
+            securityRules.isAllowed('databases/db1/documents', Method.write,
+                variables: variables),
+            isFalse);
+      });
+      test('unsupported features', () async {
+        for (final definition in [
+          unsupportedResourceDefinition,
+          unsupportedRequestResourceDefinition,
+          unsupportedGetDefinition,
+          unsupportedFunctionDefinition,
+          unsupportedTimestampDefinition
+        ]) {
+          try {
+            // Try compiling the definition.
+            FakeFirebaseSecurityRules(definition);
+          } catch (_) {
+            // Ignore CEL exceptions.
+          }
+        }
+      });
     });
   });
 }

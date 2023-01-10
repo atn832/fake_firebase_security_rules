@@ -9,11 +9,26 @@ import 'package:fake_firebase_security_rules/src/path_segment/path_segment.dart'
 import 'package:fake_firebase_security_rules/src/path_segment/variable_path_segment.dart';
 import 'package:fake_firebase_security_rules/src/path_segment/wildcard_path_segment.dart';
 import 'package:fake_firebase_security_rules/src/service.dart';
+import 'package:logger/logger.dart';
+
+final Map<String, RegExp> unsupportedFeatures = {
+  'resource': RegExp(r'[^.]resource'),
+  'request.resource': RegExp(r'request\.resource'),
+  'get': RegExp(r'get\('),
+  'functions': RegExp(r'function [\w\d_-]+\('),
+  'timestamp': RegExp(r'timestamp\.')
+};
 
 /// Parses a [String] describing a service to a [Service] wrapping [PathMatch]
 /// and compiled CEL [Program]s.
 class Parser {
   List<Service> parse(String serviceDescription) {
+    for (final feature in unsupportedFeatures.entries) {
+      if (feature.value.hasMatch(serviceDescription)) {
+        Logger().w(
+            'fake_firebase_security_rules does not support `${feature.key}` yet.');
+      }
+    }
     final input = InputStream.fromString(serviceDescription);
     final lexer = FirestoreRulesLexer(input);
     final tokens = CommonTokenStream(lexer);
