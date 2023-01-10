@@ -58,21 +58,24 @@ class PathMatch extends Equatable {
       if (potentialMatch.remainingConcreteSegments.isEmpty) {
         // Full match.
         for (final allowStatement in allowStatements) {
+          final program = allowStatement.item2;
+          final finalVariables = {
+            // Put variables
+            ...variables,
+            // and new variables first...
+            ...potentialMatch.variables,
+          };
           if (allowStatement.item1.includes(method)) {
             // Evaluate the program.
             try {
-              if (allowStatement.item2.evaluate({
-                // Put variables
-                ...variables,
-                // and new variables first...
-                ...potentialMatch.variables,
-              })) {
+              if (program.evaluate(finalVariables)) {
                 return true;
               }
             } catch (e) {
               // If an evaluation throws an error, such as on null exceptions,
               // fail silently and try other matches.
-              print('Evaluated to not allowed because of exception.');
+              print(
+                  'Evaluation of $program with input $finalVariables threw a runtime exception, so it was evaluated to `false`. See detailed exception:');
               print(e);
             }
           }
