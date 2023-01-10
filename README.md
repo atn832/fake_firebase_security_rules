@@ -9,13 +9,15 @@ This project simulates [Firebase Security Rules](https://firebase.google.com/doc
 
 ```
 service cloud.firestore {
-  match /users/{userId}/documents {
-    allow read, write: if request.auth.uid == userId;
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
   }
 }
 ```
 
-* Concrete path, access method, eg an `update` on `users/abcd/documents`,
+* Concrete path, access method, eg an `update` on `/databases/some-db/users/abcd`,
 * Variables, eg a `Map` such as `{'request': { 'auth': { 'uid': 'efgh' } } }`,
 
 the library computes whether the request should be allowed or not.
@@ -25,23 +27,40 @@ the library computes whether the request should be allowed or not.
 ```dart
 import 'package:fake_firebase_security_rules/fake_firebase_security_rules.dart';
 
-final securityRulesDescription = '''service cloud.firestore {
+// https://firebase.google.com/docs/rules/rules-and-auth#leverage_user_information_in_rules
+final authUidDescription = '''
+service cloud.firestore {
   match /databases/{database}/documents {
-    // For attribute-based access control, check for an admin claim
-    allow write: false;
-    allow read: true;
+    // Make sure the uid of the requesting user matches name of the user
+    // document. The wildcard expression {userId} makes the userId variable
+    // available in rules.
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
   }
 }''';
 
 void main(List<String> args) async {
-  final securityRules = FakeFirebaseSecurityRules(securityRulesDescription);
-  // Prints out `false`.
-  print(securityRules.isAllowed('databases/users/documents', Method.write));
+  final securityRules = FakeFirebaseSecurityRules(authUidDescription);
+  final uid = 'a57293b';
+  final variables = {
+    'request': {
+      'auth': {'uid': uid}
+    }
+  };
   // Prints out `true`.
-  print(securityRules.isAllowed('databases/users/documents', Method.read));
+  print(securityRules.isAllowed(
+      'databases/some-database/documents/users/$uid', Method.read,
+      variables: variables));
   // Prints out `false`.
   print(securityRules.isAllowed(
-      'databases/users/documents/too-deep', Method.read));
+      'databases/some-database/documents/users/someone-elses-id', Method.read,
+      variables: variables));
+  // Prints out `false`.
+  print(securityRules.isAllowed(
+      'databases/some-database/documents/somewhere-else/someone-doc',
+      Method.read,
+      variables: variables));
 }
 ```
 
@@ -51,22 +70,26 @@ See the [Unit tests](https://github.com/atn832/fake_firebase_security_rules/blob
 
 Supports:
 
-* service declarations for Firestore and Firebase Storage.
+* rules declarations used in Firestore and Firebase Storage.
 * recursive `match` definitions.
 * exhaustive path matching with path variables and wildcards, eg `/users/{userId}/{documents=**}`.
-* standard CEL types and methods, eg `bool`, `int`, `double`, `String`, `Map`, `List`, `String.match(regexp)`... See [cel-dart's supported features](https://pub.dev/packages/cel#features) for an exhaustive list.
+* `request.auth` object populated with uid, custom claims...
+* standard CEL types and methods, eg `bool`, `int`, `double`, `String`, `Map`, `List`, `String.match(regexp)`, `a in list`... See [cel-dart's supported features](https://pub.dev/packages/cel#features) for an exhaustive list.
 
 Missing:
 
-* timestamps
-* durations
+* timestamps.
+* durations.
+* custom functions.
+* `resource` object.
+* `request.resource` object.
+* `exists()`, `get()` functions.
 
 ## Implementation details
 
 ### Differences between Firebase Rules CEL and standard CEL
 
-* Timestamps. Firebase Rules uses its own [Timestamp](https://firebase.google.com/docs/reference/rules/rules.Timestamp)
- implementation while CEL uses `google.protobuf.Timestamp` ([spec](https://github.com/google/cel-spec/blob/master/doc/langdef.md#abstract-types)).
+* Timestamps. Although not implemented in this project yet, Firebase Rules uses its own [Timestamp](https://firebase.google.com/docs/reference/rules/rules.Timestamp) implementation while CEL uses `google.protobuf.Timestamp` ([spec](https://github.com/google/cel-spec/blob/master/doc/langdef.md#abstract-types)).
 
 ### How the project works
 
