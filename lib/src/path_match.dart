@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:fake_firebase_security_rules/src/method.dart';
 import 'package:fake_firebase_security_rules/src/path_match_result.dart';
 import 'package:fake_firebase_security_rules/src/path_segment/path_segment.dart';
+import 'package:logger/logger.dart';
 import 'package:tuple/tuple.dart';
 
 extension on List<PathSegment> {
@@ -74,9 +75,10 @@ class PathMatch extends Equatable {
             } catch (e) {
               // If an evaluation throws an error, such as on null exceptions,
               // fail silently and try other matches.
-              print(
-                  'Evaluation of $program with input $finalVariables threw a runtime exception, so it was evaluated to `false`. See detailed exception:');
-              print(e);
+              final log = Logger();
+              log.i(
+                  'Permission check for ${method.name} on ${concretePathSegments.join('/')} threw a runtime exception, so it was evaluated to `false`. A null exception is a common cause for such errors.\nProgram: $program\nInput: $finalVariables',
+                  e);
             }
           }
         }
