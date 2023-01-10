@@ -104,12 +104,20 @@ void main() {
     });
     test('authUidDescription', () {
       final service = Parser().parse(authUidDescription);
-      print(service);
+      expect(service.length, 1);
+      expect(service.first.pathMatches.length, 1);
+      expect(service.first.pathMatches.first.allowStatements.isEmpty, isTrue);
+      expect(service.first.pathMatches.first.children.length, 1);
+      expect(
+          service.first.pathMatches.first.children.first.allowStatements.length,
+          1);
     });
 
     test('wildcardDescription', () {
       final service = Parser().parse(wildcardDescription);
-      print(service);
+      expect(service.length, 1);
+      expect(service.first.pathMatches.length, 1);
+      expect(service.first.pathMatches.first.children.length, 2);
     });
   });
 
