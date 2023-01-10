@@ -44,6 +44,12 @@ extension PathSegments on String {
   List<String> get concretePathSegments => split('/');
 }
 
+extension Includes on List<Method> {
+  /// Whether a list of methods include a given method, eg whether [read, write]
+  /// includes update.
+  bool includes(Method method) => any((m) => m.includes(method));
+}
+
 class PathMatch extends Equatable {
   PathMatch(this.pathSegments, this.allowStatements, this.children);
 

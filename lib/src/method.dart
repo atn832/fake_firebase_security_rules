@@ -1,7 +1,3 @@
-extension Includes on List<Method> {
-  bool includes(Method method) => any((m) => m.includes(method));
-}
-
 /// Based on https://firebase.google.com/docs/rules/rules-language#method.
 enum Method {
   read('read', alsoIncludes: {Method.list}),

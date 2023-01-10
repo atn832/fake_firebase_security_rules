@@ -1,5 +1,6 @@
 import 'package:fake_firebase_security_rules/fake_firebase_security_rules.dart';
 import 'package:fake_firebase_security_rules/src/parser.dart';
+import 'package:fake_firebase_security_rules/src/path_match.dart';
 import 'package:fake_firebase_security_rules/src/path_segment/const_path_segment.dart';
 import 'package:fake_firebase_security_rules/src/path_segment/variable_path_segment.dart';
 import 'package:logger/logger.dart';
