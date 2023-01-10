@@ -52,7 +52,7 @@ class PathMatch extends Equatable {
   final List<PathMatch> children;
 
   bool isAllowed(List<String> concretePathSegments, Method method,
-      {required Map<String, dynamic> variables}) {
+      {required Map<String, dynamic> variables, required Logger logger}) {
     final potentialMatches =
         pathSegments.getPotentialMatches(concretePathSegments);
     for (final potentialMatch in potentialMatches) {
@@ -75,8 +75,7 @@ class PathMatch extends Equatable {
             } catch (e) {
               // If an evaluation throws an error, such as on null exceptions,
               // fail silently and try other matches.
-              final log = Logger();
-              log.i(
+              logger.i(
                   'Permission check for ${method.name} on ${concretePathSegments.join('/')} threw a runtime exception, so it was evaluated to `false`. A null exception is a common cause for such errors.\nProgram: $program\nInput: $finalVariables',
                   e);
             }
@@ -87,7 +86,8 @@ class PathMatch extends Equatable {
       // If partial match, check children.
       for (final child in children) {
         if (child.isAllowed(potentialMatch.remainingConcreteSegments, method,
-            variables: {...variables, ...potentialMatch.variables})) {
+            variables: {...variables, ...potentialMatch.variables},
+            logger: logger)) {
           return true;
         }
       }

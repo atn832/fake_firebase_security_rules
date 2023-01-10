@@ -299,7 +299,10 @@ void main() {
     });
     group('warnings show up nicely', () {
       test('null exceptions', () async {
-        final securityRules = FakeFirebaseSecurityRules(claimsDefinition);
+        final capture = CaptureLogOutput();
+        final logger = Logger(output: capture);
+        final securityRules =
+            FakeFirebaseSecurityRules(claimsDefinition, logger: logger);
         final variables = {
           'request': {'auth': null}
         };
@@ -309,23 +312,51 @@ void main() {
             securityRules.isAllowed('databases/db1/documents', Method.write,
                 variables: variables),
             isFalse);
+        expect(
+            capture.outputs,
+            contains(
+                'Permission check for write on databases/db1/documents threw a runtime exception'));
       });
       test('unsupported features', () async {
-        for (final definition in [
-          unsupportedResourceDefinition,
-          unsupportedRequestResourceDefinition,
-          unsupportedGetDefinition,
-          unsupportedFunctionDefinition,
-          unsupportedTimestampDefinition
+        for (final entry in [
+          [unsupportedResourceDefinition, 'resource'],
+          [unsupportedRequestResourceDefinition, 'request.resource'],
+          [unsupportedGetDefinition, 'get'],
+          [unsupportedFunctionDefinition, 'functions'],
+          [unsupportedTimestampDefinition, 'timestamp']
         ]) {
+          final capture = CaptureLogOutput();
+          final definition = entry.first;
+          final featureName = entry.last;
           try {
+            Logger l = Logger(output: capture);
             // Try compiling the definition.
-            FakeFirebaseSecurityRules(definition);
+            FakeFirebaseSecurityRules(definition, logger: l);
           } catch (_) {
             // Ignore CEL exceptions.
+          } finally {
+            expect(
+                capture.outputs, contains('does not support `$featureName`'));
           }
         }
       });
     });
   });
+}
+
+class CaptureLogOutput implements LogOutput {
+  final List<String> _outputs = [];
+
+  String get outputs => _outputs.join('\n');
+
+  @override
+  void destroy() {}
+
+  @override
+  void init() {}
+
+  @override
+  void output(OutputEvent event) {
+    _outputs.addAll(event.lines);
+  }
 }

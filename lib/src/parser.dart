@@ -22,10 +22,13 @@ final Map<String, RegExp> unsupportedFeatures = {
 /// Parses a [String] describing a service to a [Service] wrapping [PathMatch]
 /// and compiled CEL [Program]s.
 class Parser {
+  Parser({Logger? logger}) : logger = logger ?? Logger();
+
+  final Logger logger;
   List<Service> parse(String serviceDescription) {
     for (final feature in unsupportedFeatures.entries) {
       if (feature.value.hasMatch(serviceDescription)) {
-        Logger().w(
+        logger.w(
             'fake_firebase_security_rules does not support `${feature.key}` yet.');
       }
     }
