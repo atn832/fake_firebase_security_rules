@@ -1,3 +1,7 @@
+## 0.5.3
+
+Upgraded logger to ^2.0.2. Thank you [cedvdb](https://github.com/atn832/fake_firebase_security_rules/pull/5)!
+
 ## 0.5.2
 
 * When evaluating allow statements
