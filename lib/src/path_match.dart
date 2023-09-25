@@ -83,7 +83,7 @@ class PathMatch extends Equatable {
               // fail silently and try other matches.
               logger.i(
                   'Permission check for ${method.name} on ${concretePathSegments.join('/')} threw a runtime exception, so it was evaluated to `false`. A null exception is a common cause for such errors.\nProgram: $program\nInput: $finalVariables',
-                  e);
+                  error: e);
             }
           }
         }

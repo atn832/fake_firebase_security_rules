@@ -351,10 +351,14 @@ class CaptureLogOutput implements LogOutput {
   String get outputs => _outputs.join('\n');
 
   @override
-  void destroy() {}
+  Future<void> destroy() {
+    return Future.value();
+  }
 
   @override
-  void init() {}
+  Future<void> init() {
+    return Future.value();
+  }
 
   @override
   void output(OutputEvent event) {
