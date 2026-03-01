@@ -1,3 +1,8 @@
+## 0.5.4
+
+* Updated the SDK dependency to 3.0 (to be able to use Records).
+* Removed the dependency on package:tuple.
+
 ## 0.5.3
 
 Upgraded logger to ^2.0.2. Thank you [cedvdb](https://github.com/atn832/fake_firebase_security_rules/pull/5)!

@@ -65,11 +65,12 @@ AllowStatement visitAllowRule(AllowContext allow) {
   final environment = Environment.standard();
   final ast = environment.compile(celCode);
   final program = environment.makeProgram(ast);
-  return AllowStatement(
-      allow.METHODs()
-          .map((node) => Method.fromNameInFirebase(node.text!))
-          .toList(),
-      program);
+  return (
+    allow.METHODs()
+        .map((node) => Method.fromNameInFirebase(node.text!))
+        .toList(),
+    program
+  );
 }
 
 /// Extensions to help clean up CEL.
