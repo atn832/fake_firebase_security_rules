@@ -4,7 +4,6 @@ import 'package:fake_firebase_security_rules/src/method.dart';
 import 'package:fake_firebase_security_rules/src/path_match_result.dart';
 import 'package:fake_firebase_security_rules/src/path_segment/path_segment.dart';
 import 'package:logger/logger.dart';
-import 'package:tuple/tuple.dart';
 
 extension on List<PathSegment> {
   /// Returns whether the beginning of the concrete path matches with its path
@@ -65,14 +64,14 @@ class PathMatch extends Equatable {
       if (potentialMatch.remainingConcreteSegments.isEmpty) {
         // Full match.
         for (final allowStatement in allowStatements) {
-          final program = allowStatement.item2;
+          final program = allowStatement.$2;
           final finalVariables = {
             // Put variables
             ...variables,
             // and new variables first...
             ...potentialMatch.variables,
           };
-          if (allowStatement.item1.includes(method)) {
+          if (allowStatement.$1.includes(method)) {
             // Evaluate the program.
             try {
               if (program.evaluate(finalVariables)) {
@@ -108,4 +107,4 @@ class PathMatch extends Equatable {
   bool? get stringify => true;
 }
 
-typedef AllowStatement = Tuple2<List<Method>, Program>;
+typedef AllowStatement = (List<Method>, Program);
