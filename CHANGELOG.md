@@ -1,3 +1,7 @@
+## 0.6.0
+
+* **BREAKING CHANGE**: Updated `cel` dependency to 0.6.0 for stricter evaluation of missing key values. For example, when evaluating `request.auth == null`, `request.auth` has to be defined as `null`. If `auth` is missing, it will throw an exception.
+
 ## 0.5.4
 
 * Updated the SDK dependency to 3.0 (to be able to use Records).

@@ -1,6 +1,6 @@
 name: fake_firebase_security_rules
 description: Fake for Firebase Security Rules. To be used by fake_cloud_firestore and mock_firebase_storage.
-version: 0.5.4
+version: 0.6.0
 repository: https://github.com/atn832/fake_firebase_security_rules
 homepage: https://www.wafrat.com
 
@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   antlr4: ^4.11.1
-  cel: ^0.5.1
+  cel: ^0.6.0
   equatable: ^2.0.5
   logger: ^2.0.2
 
